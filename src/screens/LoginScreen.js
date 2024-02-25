@@ -37,7 +37,7 @@ const Login = ({navigation}) => {
               </View>
             </View>
             <View className="mt-10 w-full">
-              <Primarybutton onPress={() => navigation.navigate("Home")} title="Login" />
+              <Primarybutton onPress={() => navigation.navigate("Main")} title="Login" />
             </View>
             <Text className="text-xs mt-5">
               Don't have an account?

@@ -24,7 +24,7 @@ export default function App() {
           component={SignupScreen}
         />
         <Stack.Screen name="EditProfile" component={EditProfile} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Spaccy" component={HomeScreen} />
         <Stack.Screen
           options={{ headerShown: false }}
           name="Main"

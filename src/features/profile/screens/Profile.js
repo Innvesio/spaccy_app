@@ -7,29 +7,30 @@ import {
   Save2,
   UserEdit,
 } from "iconsax-react-native";
+import {appColors} from "../../../constants/colors"
 
 const Profile = ({navigation}) => {
   const userProfileSettings = [
     {
-      icon: <UserEdit size="26" color="#44403C" variant="Bold" />,
+      icon: <UserEdit size="26" color={appColors.primaryColor} variant="Bold" />,
       title: "My account",
       route: "EditProfile",
       description: "Manage your account to meet your standard.",
     },
     {
-      icon: <Notification size="26" color="#44403C" variant="Bold" />,
+      icon: <Notification size="26" color={appColors.primaryColor} variant="Bold" />,
       title: "Notifications",
       route: `/notifications`,
       description: "Important information that we wouldn't want you to miss.",
     },
     {
-      icon: <Save2 size="26" color="#44403C" variant="Bold" />,
+      icon: <Save2 size="26" color={appColors.primaryColor} variant="Bold" />,
       title: "Saved spaces",
       route: `/profile/saved/spaces`,
       description: "A complete list of all the spaces you have saved.",
     },
     {
-      icon: <MessageQuestion size="26" color="#44403C" variant="Bold" />,
+      icon: <MessageQuestion size="26" color={appColors.primaryColor} variant="Bold" />,
       title: "Help and support",
       route: "",
       description: "Get answers to questions you may have.",

@@ -2,8 +2,16 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { LoginScreen, SignupScreen } from "../screens";
 import * as Location from "expo-location";
 import { useEffect } from "react";
-import { Home, Profile, SearchNormal, Ticket2 } from "iconsax-react-native";
-import { ProfileScreen } from "../features";
+import {
+  Home,
+  Profile,
+  SearchNormal,
+  ShoppingCart,
+  Ticket2,
+} from "iconsax-react-native";
+import { ExploreScreen, HomeScreen, ProfileScreen } from "../features";
+import { appColors } from "../constants/colors";
+import { View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 const BottomNavigation = () => {
@@ -28,32 +36,43 @@ const BottomNavigation = () => {
           let rn = route.name;
           let icon;
 
-          if (rn === "Home") {
+          if (rn === "Spaccy") {
             icon = focused ? (
-              <Home variant="Bold" color="#44403C" />
+              <Home variant="Bold" color={appColors.primaryColor} />
             ) : (
-              <Home color="#44403C" />
+              <Home color={appColors.primaryColor} />
             );
           }
           if (rn === "Explore") {
             icon = focused ? (
-              <SearchNormal variant="Bold" color="#44403C" />
+              <SearchNormal variant="Bold" color={appColors.primaryColor} />
             ) : (
-              <SearchNormal color="#44403C" />
+              <SearchNormal color={appColors.primaryColor} />
             );
           }
           if (rn === "Bookings") {
-            icon = focused ? (
-              <Ticket2 variant="Bold" color="#44403C" />
+            icon = focused ? ( 
+              <View className="p- bg-stone-700 rounded-full p-2">
+                <Ticket2 color="#fff" />
+              </View>
             ) : (
-              <Ticket2 color="#44403C" />
+              <View className="p- bg-stone-700 rounded-full p-2">
+                <Ticket2 color="#fff" />
+              </View>
+            );
+          }
+          if (rn === "Cart") {
+            icon = focused ? (
+              <ShoppingCart variant="Bold" color={appColors.primaryColor} />
+            ) : (
+              <ShoppingCart color={appColors.primaryColor} />
             );
           }
           if (rn === "Profile") {
             icon = focused ? (
-              <Profile variant="Bold" color="#44403C" />
+              <Profile variant="Bold" color={appColors.primaryColor} />
             ) : (
-              <Profile color="#44403C" />
+              <Profile color={appColors.primaryColor} />
             );
           }
 
@@ -61,9 +80,10 @@ const BottomNavigation = () => {
         },
       })}
     >
-      <Tab.Screen name="Home" component={LoginScreen} />
-      <Tab.Screen name="Explore" component={SignupScreen} />
+      <Tab.Screen name="Spaccy" component={HomeScreen} />
+      <Tab.Screen name="Explore" component={ExploreScreen} />
       <Tab.Screen name="Bookings" component={SignupScreen} />
+      <Tab.Screen name="Cart" component={SignupScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
