@@ -3,22 +3,26 @@ import React from "react";
 import {
   MessageQuestion,
   Notification,
-  ProfileCircle,
   Save2,
   UserEdit,
 } from "iconsax-react-native";
-import {appColors} from "../../../constants/colors"
+import { appColors } from "../../../constants/colors";
+import { ProfilePicture } from "../../../components";
 
-const Profile = ({navigation}) => {
+ const Profile = ({ navigation }) => {
   const userProfileSettings = [
     {
-      icon: <UserEdit size="26" color={appColors.primaryColor} variant="Bold" />,
+      icon: (
+        <UserEdit size="26" color={appColors.primaryColor} variant="Bold" />
+      ),
       title: "My account",
       route: "EditProfile",
       description: "Manage your account to meet your standard.",
     },
     {
-      icon: <Notification size="26" color={appColors.primaryColor} variant="Bold" />,
+      icon: (
+        <Notification size="26" color={appColors.primaryColor} variant="Bold" />
+      ),
       title: "Notifications",
       route: `/notifications`,
       description: "Important information that we wouldn't want you to miss.",
@@ -30,7 +34,13 @@ const Profile = ({navigation}) => {
       description: "A complete list of all the spaces you have saved.",
     },
     {
-      icon: <MessageQuestion size="26" color={appColors.primaryColor} variant="Bold" />,
+      icon: (
+        <MessageQuestion
+          size="26"
+          color={appColors.primaryColor}
+          variant="Bold"
+        />
+      ),
       title: "Help and support",
       route: "",
       description: "Get answers to questions you may have.",
@@ -40,10 +50,9 @@ const Profile = ({navigation}) => {
     <View className="flex-1 p-[24] bg-white">
       {/* Profile Image */}
       <View className="w-full flex items-center mt-7">
-        <View className="w-40 h-40 bg-white rounded-full mx-auto flex p-[2px] border-2 border-[#C3B091] items-center justify-center">
-          <View className="w-full h-full bg-[#A0C6AB] flex justify-center items-center rounded-full">
-            <Text className="text-5xl font-bold  mt-4  text-stone-900">S</Text>
-          </View>
+        <View className="w-40 h-40">
+
+        <ProfilePicture firstLetter={"S"} />
         </View>
         <Text className="font-semibold text-xl mt-2">Shedrack Aigbe</Text>
         <Text className="font-medium text-gray-500 text-xs mt-1">
@@ -72,4 +81,5 @@ const Profile = ({navigation}) => {
   );
 };
 
-export default Profile;
+
+export default Profile

@@ -13,7 +13,7 @@ export default function CustomInput({
         {label}
       </Text>
       <View className="rounded border flex flex-row justify-center items-center border-stone-300">
-        <View className="text-[#504B44] ml-12">{icon}</View>
+        {icon && <View className="text-[#504B44] ml-12">{icon}</View>}
         <TextInput
           onChangeText={onChangeText}
           placeholder={placeholder}
