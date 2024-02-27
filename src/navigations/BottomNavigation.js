@@ -9,7 +9,7 @@ import {
   ShoppingCart,
   Ticket2,
 } from "iconsax-react-native";
-import { ExploreScreen, HomeScreen, ProfileScreen } from "../features";
+import { BookingScreen,  ExploreScreen, HomeScreen, ProfileScreen } from "../features";
 import { appColors } from "../constants/colors";
 import { View } from "react-native";
 
@@ -51,14 +51,10 @@ const BottomNavigation = () => {
             );
           }
           if (rn === "Bookings") {
-            icon = focused ? ( 
-              <View className="p- bg-stone-700 rounded-full p-2">
-                <Ticket2 color="#fff" />
-              </View>
+            icon = focused ? (
+              <Ticket2 color={appColors.primaryColor} variant="Bold" />
             ) : (
-              <View className="p- bg-stone-700 rounded-full p-2">
-                <Ticket2 color="#fff" />
-              </View>
+              <Ticket2 color={appColors.primaryColor} />
             );
           }
           if (rn === "Cart") {
@@ -82,7 +78,7 @@ const BottomNavigation = () => {
     >
       <Tab.Screen name="Spaccy" component={HomeScreen} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
-      <Tab.Screen name="Bookings" component={SignupScreen} />
+      <Tab.Screen name="Bookings" component={BookingScreen} />
       <Tab.Screen name="Cart" component={SignupScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

@@ -1,20 +1,30 @@
 import { View, Text, TextInput } from "react-native";
 import React from "react";
+import { appColors } from "../../constants/colors";
 
 export default function CustomInput({
+  value,
   placeholder,
   label,
   icon,
   onChangeText,
+  onFocus,
 }) {
   return (
     <View className="w-full flex">
-      <Text className="text-stone-900 font-medium capitalize pb-[4px]">
-        {label}
-      </Text>
+      {label && (
+        <Text className="text-stone-900 font-medium capitalize pb-[4px]">
+          {label}
+        </Text>
+      )}
       <View className="rounded border flex flex-row justify-center items-center border-stone-300">
         {icon && <View className="text-[#504B44] ml-12">{icon}</View>}
         <TextInput
+          value={value}
+          onFocus={onFocus}
+          
+          cursorColor={appColors.primaryColor}
+          selectionColor={appColors.primaryColor}
           onChangeText={onChangeText}
           placeholder={placeholder}
           placeholderTextColor="#d6d3d1"

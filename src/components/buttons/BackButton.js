@@ -10,7 +10,7 @@ const BackButton = ({ onPress }) => {
       style={{ backgroundColor: appColors.primaryColor }}
       className="p-1 rounded-full"
     >
-      <ArrowLeft2 size={20} color="#fff" />
+      <ArrowLeft2 size={18} color="#fff" />
     </TouchableOpacity>
   );
 };
