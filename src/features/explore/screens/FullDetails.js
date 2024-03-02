@@ -6,22 +6,35 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { BackButton, Primarybutton } from "../../../components";
-import { ArrowRight, Location } from "iconsax-react-native";
+import React, { useCallback, useContext, useRef, useState } from "react";
+import { Location } from "iconsax-react-native";
 import { appColors } from "../../../constants/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import PricingCard from "../components/ui/PricingCard";
-import { Standing } from "../../../../assets/shapes/shapes.js";
+import { BackButton, Primarybutton } from "../../../components";
+import EnquireBottomSheet from "../components/modal/EnquireBottomSheet";
+import { BookingContext } from "../../../context/BookingContext";
+
+// import { Standing } from "../../../../assets/shapes/shapes.js";
 
 const FullDetails = ({ route, navigation }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const { enquireNow } = useContext(BookingContext);
   const details = route.params;
+  // ref
+  const bottomSheetRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   navigation.setOptions({
     title: details.spaceName + " — " + details.venueInfo.venueName,
     headerLeft: () => <BackButton onPress={() => navigation.pop()} />,
   });
+
+  // / callbacks
+  const handleSheetChanges = useCallback((index) => {
+    bottomSheetRef.current?.snapToIndex(index);
+    setModalIsOpen(true);
+  }, []);
 
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
@@ -60,13 +73,12 @@ const FullDetails = ({ route, navigation }) => {
     );
   };
 
-  useEffect(() => {
-    console.log(details);
-  }, []);
-
   return (
-    <View className="flex-1 bg-whiteb-20">
-      <ScrollView showsHorizontalScrollIndicator={false}>
+    <View className="flex-1 bg-white ">
+      <ScrollView
+        // className="opacity-1"
+        showsHorizontalScrollIndicator={false}
+      >
         <View className=" relative items-center">
           <FlatList
             className="rounded-b-2xl"
@@ -104,16 +116,22 @@ const FullDetails = ({ route, navigation }) => {
           <View>
             <Text className="font-bold text-lg truncate mt-5">CAPACITY</Text>
             <View>
-              <View>
+              {/* <View>
                 <Standing width={20} height={20} />
-              </View>
+              </View> */}
             </View>
           </View>
         </View>
-        {/* <View className="absolute bottom-0 w-full">
-        <Primarybutton title="Enquire now" />
-      </View> */}
       </ScrollView>
+      <EnquireBottomSheet
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+      />
+      <View>
+        <View className="px-3 py-8 bg-white">
+          <Primarybutton onPress={() => enquireNow()} title="Enquire now" />
+        </View>
+      </View>
     </View>
   );
 };

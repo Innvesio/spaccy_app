@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   MessageQuestion,
   Notification,
@@ -8,8 +8,31 @@ import {
 } from "iconsax-react-native";
 import { appColors } from "../../../constants/colors";
 import { ProfilePicture } from "../../../components";
+import { AuthContext } from "../../../context/AuthContext";
 
- const Profile = ({ navigation }) => {
+const Profile = ({ navigation }) => {
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log(user);
+  }, []);
+
+  const getAccountType = () => {
+    switch (user.data.accountType) {
+      case "venueOwner":
+        return "Venue Owner";
+        break;
+      case "vendor":
+        return "Vendor";
+        break;
+      case "eventEnthusiast":
+        return "Event Enthusiast";
+        break;
+
+      default:
+        break;
+    }
+  };
   const userProfileSettings = [
     {
       icon: (
@@ -51,19 +74,23 @@ import { ProfilePicture } from "../../../components";
       {/* Profile Image */}
       <View className="w-full flex items-center mt-7">
         <View className="w-40 h-40">
-
-        <ProfilePicture firstLetter={"S"} />
+          <ProfilePicture firstLetter={user?.data.firstName[0]} />
         </View>
-        <Text className="font-semibold text-xl mt-2">Shedrack Aigbe</Text>
+        <Text className="font-semibold text-xl mt-2">
+          {user?.data.firstName + " " + user?.data.lastName}
+        </Text>
         <Text className="font-medium text-gray-500 text-xs mt-1">
-          Event Enthusiast
+          {getAccountType()}
         </Text>
       </View>
       {/* End Profile Image */}
       <View className="bg-white  border-gray-200  rounded-xl space-y-3 relative w-full mt-8">
         {userProfileSettings.map((item, index) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate(item.route)}
+            onPress={() => {
+              navigation.navigate(item.route);
+              console.log(user);
+            }}
             key={index}
             className="h-20 w-full border rounded-md flex space-x-4 flex-row items-center px-5  border-gray-200"
           >
@@ -81,5 +108,4 @@ import { ProfilePicture } from "../../../components";
   );
 };
 
-
-export default Profile
+export default Profile;

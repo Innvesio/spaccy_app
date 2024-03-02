@@ -51,6 +51,7 @@ const Explore = ({ navigation }) => {
           }
         )
         .then((res) => {
+          console.log(res.data);
           setSpaces(res.data);
         })
         .catch((err) => {

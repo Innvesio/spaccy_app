@@ -9,6 +9,8 @@ export default function CustomInput({
   icon,
   onChangeText,
   onFocus,
+  secureTextEntry,
+  id,
 }) {
   return (
     <View className="w-full flex">
@@ -20,9 +22,10 @@ export default function CustomInput({
       <View className="rounded border flex flex-row justify-center items-center border-stone-300">
         {icon && <View className="text-[#504B44] ml-12">{icon}</View>}
         <TextInput
+          secureTextEntry={secureTextEntry}
           value={value}
           onFocus={onFocus}
-          
+          id={id}
           cursorColor={appColors.primaryColor}
           selectionColor={appColors.primaryColor}
           onChangeText={onChangeText}

@@ -12,39 +12,68 @@ import {
   HomeScreen,
 } from "./src/features";
 import { SpaceProvider } from "./src/context/SpaceContext";
+import { ChatProvider } from "./src/context/ChatContext";
+import { ToastProvider } from "react-native-toast-notifications";
+import { AuthProvider } from "./src/context/AuthContext";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { BookingProvider } from "./src/context/BookingContext";
 
 // Stack
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <SpaceProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShadowVisible: false }}>
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={LoginScreen}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Signup"
-            component={SignupScreen}
-          />
-          <Stack.Screen name="FullDetails" component={FullDetailsScreen} />
-          <Stack.Screen name="EditProfile" component={EditProfile} />
-          <Stack.Screen name="Cart" component={Cart} />
-          <Stack.Screen name="Spaccy" component={HomeScreen} />
-          <Stack.Screen name="BookingDetails" component={BookingDetails} />
-          <Stack.Screen name="Chat" component={ChatScreen} />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Main"
-            component={BottomNavigation}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SpaceProvider>
+    <ToastProvider>
+      <AuthProvider>
+        <SpaceProvider>
+          <BookingProvider>
+            <ChatProvider>
+              <BottomSheetModalProvider>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <NavigationContainer>
+                    <Stack.Navigator
+                      screenOptions={{ headerShadowVisible: false }}
+                    >
+                      <Stack.Screen
+                        options={{ headerShown: false }}
+                        name="Login"
+                        component={LoginScreen}
+                      />
+                      <Stack.Screen
+                        options={{ headerShown: false }}
+                        name="Signup"
+                        component={SignupScreen}
+                      />
+                      <Stack.Screen
+                        name="FullDetails"
+                        component={FullDetailsScreen}
+                      />
+                      <Stack.Screen
+                        name="EditProfile"
+                        component={EditProfile}
+                      />
+                      <Stack.Screen name="Cart" component={Cart} />
+                      <Stack.Screen name="Spaccy" component={HomeScreen} />
+                      <Stack.Screen
+                        name="BookingDetails"
+                        component={BookingDetails}
+                      />
+                      <Stack.Screen name="Chat" component={ChatScreen} />
+                      <Stack.Screen
+                        options={{ headerShown: false }}
+                        name="Main"
+                        component={BottomNavigation}
+                      />
+                    </Stack.Navigator>
+                  </NavigationContainer>
+                </GestureHandlerRootView>
+              </BottomSheetModalProvider>
+            </ChatProvider>
+          </BookingProvider>
+        </SpaceProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 }
 

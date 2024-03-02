@@ -35,7 +35,10 @@ const Home = ({ navigation }) => {
     headerRight: () => (
       <View className="flex flex-row px-[18px] space-x-6">
         <Notification color={appColors.primaryColor} />
-        <Message color={appColors.primaryColor} />
+        <Message
+          onPress={() => navigation.navigate("Chat")}
+          color={appColors.primaryColor}
+        />
       </View>
     ),
   });
@@ -44,7 +47,10 @@ const Home = ({ navigation }) => {
     <View className="py-[24px] bg-white flex-1">
       <View className="px-[24px]">
         {/* Search Bar */}
-        <InputWithIcon icon={<SearchNormal color={appColors.primaryColor} />} placeholder="Search for space" />
+        <InputWithIcon
+          icon={<SearchNormal color={appColors.primaryColor} />}
+          placeholder="Search for space"
+        />
         {/*End of Search Bar */}
       </View>
       <View className="mt-5 ">
