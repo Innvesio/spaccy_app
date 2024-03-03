@@ -10,6 +10,8 @@ export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [currentConversation, setCurrentConversation] = useState({});
+  const [newMessage, setNewMessage] = useState("");
+  const [messages, setMessages] = useState([]);
   const [currentConvoMessages, setCurrentConvoMessage] = useState([]);
 
   const getAllConversations = () => {
@@ -38,6 +40,7 @@ export const ChatProvider = ({ children }) => {
       .then((res) => {
         console.log("Chats", res.data);
         setCurrentConvoMessage(res.data.data);
+        setMessages(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -61,6 +64,37 @@ export const ChatProvider = ({ children }) => {
       });
   };
 
+  // Function to get all conversations
+  const sendMessage = (convoId) => {
+    const msg = {
+      senderId: user.data._id,
+      message: newMessage,
+      conversationId: convoId || currentConversation._id,
+      messageType: "text",
+      createdAt: new Date(),
+    };
+    setMessages((prev) => [...prev, msg]);
+    const details = {
+      message: newMessage,
+      conversationId: convoId || currentConversation._id,
+      messageType: "text",
+    };
+    axios
+      .post(`${env.API_URL}/chat/send`, details, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      })
+      .then((res) => {
+        setNewMessage("");
+        getAllConvoChats(currentConversation._id);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
+
   useEffect(() => {
     getAllCoversations();
   }, []);
@@ -70,6 +104,11 @@ export const ChatProvider = ({ children }) => {
       value={{
         chats,
         setChats,
+        sendMessage,
+        newMessage,
+        setNewMessage,
+        messages,
+        setMessages,
         getAllConvoChats,
         conversations,
         setConversations,

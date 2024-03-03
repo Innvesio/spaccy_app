@@ -21,17 +21,11 @@ const Chat = ({ navigation }) => {
     headerTitleAlign: "left",
     headerTitle: (props) => (
       <View style={{ flex: 1, flexDirection: "row" }}>
-        <Text className="font-semibold text-xl lowercase">
-          {user.data.firstName + " " + user.data.lastName}
-        </Text>
+        <Text className="font-bold text-xl capitalize">Messages</Text>
       </View>
     ),
     headerLeft: () => <BackButton onPress={() => navigation.pop()} />,
   });
-
-  useEffect(() => {
-    console.log(conversations);
-  }, []);
 
   const [refreshing, setRefreshing] = useState(false);
 

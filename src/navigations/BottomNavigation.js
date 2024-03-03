@@ -9,7 +9,13 @@ import {
   ShoppingCart,
   Ticket2,
 } from "iconsax-react-native";
-import { BookingScreen,  ExploreScreen, HomeScreen, ProfileScreen } from "../features";
+import {
+  BookingScreen,
+  CartScreen,
+  ExploreScreen,
+  HomeScreen,
+  ProfileScreen,
+} from "../features";
 import { appColors } from "../constants/colors";
 import { View } from "react-native";
 
@@ -79,7 +85,7 @@ const BottomNavigation = () => {
       <Tab.Screen name="Spaccy" component={HomeScreen} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
       <Tab.Screen name="Bookings" component={BookingScreen} />
-      <Tab.Screen name="Cart" component={SignupScreen} />
+      <Tab.Screen name="Cart" component={CartScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

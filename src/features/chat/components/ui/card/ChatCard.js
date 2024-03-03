@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Image } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../../context/AuthContext";
 import env from "../../../../../constants/env";
@@ -44,11 +44,20 @@ const ChatCard = ({ details, navigation }) => {
       }}
       className="mt-3 w-full py-1 space-x-3 flex-row items-center"
     >
-      <View className="w-14 h-14 rounded-full grid  bg-[#A0C6AB]">
-        <Text className="text-2xl leading-[30px] capitalize  m-auto font-semibold">
-          {receiver.firstName ? receiver.firstName[0] : null}
-        </Text>
+      <View className="w-14 h-14 rounded-full grid overflow-hidden  bg-[#A0C6AB]">
+        {receiver?.profilePhoto?.length >= 0 ? (
+          <Image
+            className="w-full h-full"
+            source={{ uri: receiver.profilePhoto[0].url }}
+            alt="image"
+          />
+        ) : (
+          <Text className="text-2xl leading-[30px] capitalize  m-auto font-semibold">
+            {receiver.firstName ? receiver.firstName[0] : null}
+          </Text>
+        )}
       </View>
+
       <View className="justify-center items-start">
         <Text className="font-semibold capitalize text-sm">
           {receiver.firstName + " " + receiver.lastName}
