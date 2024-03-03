@@ -25,24 +25,24 @@ const Login = ({ navigation }) => {
   const submit = async () => {
     setLoading(true);
     navigation.navigate("Main");
-    // try {
-    //   const response = await axios.post(`${env.API_URL}/auth/login`, loginData);
-    //   if (response.data) {
-    //     setLoading(false);
-    //     console.log(response.data);
-    //     const jsonValue = JSON.stringify(response.data);
-    //     await AsyncStorage.setItem("user", jsonValue);
-    //     navigation.navigate("Main");
-    //   } else {
-    //     console.log("not working");
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    //   setLoading(false);
-    //   toast.show(err.response ? err.response.data.error : "Could not login", {
-    //     type: "danger",
-    //   });
-    // }
+    try {
+      const response = await axios.post(`${env.API_URL}/auth/login`, loginData);
+      if (response.data) {
+        setLoading(false);
+        console.log(response.data);
+        const jsonValue = JSON.stringify(response.data);
+        await AsyncStorage.setItem("user", jsonValue);
+        navigation.navigate("Main");
+      } else {
+        console.log("not working");
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      toast.show(err.response ? err.response.data.error : "Could not login", {
+        type: "danger",
+      });
+    }
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

@@ -7,6 +7,7 @@ import {
   BookingDetails,
   Cart,
   ChatScreen,
+  ChatsScreen,
   EditProfile,
   FullDetailsScreen,
   HomeScreen,
@@ -60,6 +61,7 @@ export default function App() {
                         component={BookingDetails}
                       />
                       <Stack.Screen name="Chat" component={ChatScreen} />
+                      <Stack.Screen name="Chats" component={ChatsScreen} />
                       <Stack.Screen
                         options={{ headerShown: false }}
                         name="Main"
