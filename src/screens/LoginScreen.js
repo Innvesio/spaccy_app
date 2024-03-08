@@ -24,7 +24,7 @@ const Login = ({ navigation }) => {
 
   const submit = async () => {
     setLoading(true);
-    navigation.navigate("Main");
+    // navigation.navigate("Main");
     try {
       const response = await axios.post(`${env.API_URL}/auth/login`, loginData);
       if (response.data) {
