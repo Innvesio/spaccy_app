@@ -45,7 +45,7 @@ export const ChatProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    setSocket(io("http://192.168.8.100:8000"));
+    setSocket(io(env.SOCKET_IO));
   }, []);
 
   const getAllConversations = () => {
