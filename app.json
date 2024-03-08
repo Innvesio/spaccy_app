@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "spaccy_app",
-    "slug": "spaccy_app",
+    "name": "spaccy",
+    "slug": "spaccy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,16 +19,26 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "infoPlist": {
         "NSLocationAlwaysAndWhenInUseUsageDescription": "REASON_FOR_REQUEST",
-        "UIBackgroundModes": ["location", "fetch"]
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
       },
       "supportsTablet": true
     },
     "android": {
-      "permissions": ["ACCESS_BACKGROUND_LOCATION"],
+      "package": "com.spaccy.spaccy",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -36,6 +46,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fdd7e23f-d566-4f09-8310-abd3761dfe8e"
+      }
     }
   }
 }

@@ -46,24 +46,32 @@ const Bookings = ({ navigation }) => {
             placeholder="Search for bookings"
           />
         </View>
-        {bookings?.map((item, index) => (
-          <Pressable
-            onPress={() => navigation.navigate("BookingDetails", item)}
-            key={index}
-          >
-            <BookingCard
-              eventTitle={`${item.event.type} event for ${item.eventTitle}`}
-              eventDate={moment(item.event.date).format("MMM DD, YYYY")}
-              eventStartTime={moment(item.event.startTime, "x").format(
-                "hh:mm A"
-              )}
-              eventEndTime={moment(item.event.endTime, "x").format("hh:mm A")}
-              status={item.status}
-              eventType={item.event.type}
-              numberOfGuests={item.event.numberOfGuests}
-            />
-          </Pressable>
-        ))}
+        {bookings.length <= 0 ? (
+          <View className="flex-1 justify-center pt-20 items-center">
+            <Text className="text-xl font-bold text-stone-300">
+              No Booking found
+            </Text>
+          </View>
+        ) : (
+          bookings?.map((item, index) => (
+            <Pressable
+              onPress={() => navigation.navigate("BookingDetails", item)}
+              key={index}
+            >
+              <BookingCard
+                eventTitle={`${item.event.type} event for ${item.eventTitle}`}
+                eventDate={moment(item.event.date).format("MMM DD, YYYY")}
+                eventStartTime={moment(item.event.startTime, "x").format(
+                  "hh:mm A"
+                )}
+                eventEndTime={moment(item.event.endTime, "x").format("hh:mm A")}
+                status={item.status}
+                eventType={item.event.type}
+                numberOfGuests={item.event.numberOfGuests}
+              />
+            </Pressable>
+          ))
+        )}
       </ScrollView>
     </View>
   );
