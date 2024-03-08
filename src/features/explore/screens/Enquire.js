@@ -144,7 +144,7 @@ const Enquire = ({ route, navigation }) => {
     }
   };
   const enquireNow = () => {
-    bookaSpace(details);
+    bookaSpace(details, "space", searchValue);
     console.log(bookingSuccess);
     if (bookingSuccess) {
       createConvasation(

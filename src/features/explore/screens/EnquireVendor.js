@@ -144,7 +144,7 @@ const EnquireVendor = ({ route, navigation }) => {
   };
 
   const enquireNow = () => {
-    bookaVendor(details);
+    bookaVendor(details, searchValue);
     if (bookingSuccess) {
       createConvasation(
         "vendor",

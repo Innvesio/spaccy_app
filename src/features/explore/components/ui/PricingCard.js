@@ -16,7 +16,10 @@ const PricingCard = ({ details }) => {
           </Text>
         </View>
         {Object.keys(details.pricing.days).map((key) => (
-          <View className="py-3 flex-row justify-between items-center border-b border-stone-300">
+          <View
+            key={Math.floor(Math.random() * 20000000)}
+            className="py-3 flex-row justify-between items-center border-b border-stone-300"
+          >
             <Text className="font-medium capitalize">{key}</Text>
             <View className="flex-row space-x-2 font-medium">
               <Text className="font-medium">

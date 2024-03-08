@@ -104,7 +104,7 @@ const Home = ({ navigation }) => {
               className="space-x-4 px-[24px]"
             >
               {vendors.map((item, index) => (
-                <View>
+                <View key={index}>
                   <VendorPreview
                     image={item.image}
                     name={item.name}

@@ -35,8 +35,18 @@ export const BookingProvider = ({ children }) => {
         },
       })
       .then((res) => {
+        const allBookings = res?.data.data;
+
+        let thisUserBookingHistory = [];
+        for (let i = 0; i < allBookings.length; i++) {
+          const { client } = allBookings[i];
+          if (client.id === user.data._id) {
+            thisUserBookingHistory.push(allBookings[i]);
+          }
+        }
+
         setGetBookingsIsLoading(false);
-        setBookings(res.data.data);
+        setBookings(thisUserBookingHistory);
       })
       .catch((err) => {
         console.log(err);
@@ -44,7 +54,7 @@ export const BookingProvider = ({ children }) => {
       });
   };
 
-  const bookaSpace = (spaceDetails, type) => {
+  const bookaSpace = (spaceDetails, type, eventType) => {
     const details = {
       status: "pending",
       eventTitle: user?.data.firstName,
@@ -61,7 +71,7 @@ export const BookingProvider = ({ children }) => {
         flexible: false,
       },
       event: {
-        type: "cecece",
+        type: eventType,
         numberOfGuests: enquireNowDetails.people,
         endTime: enquireNowDetails.dateAndTime.endTime,
         startTime: enquireNowDetails.dateAndTime.startTime,
@@ -90,7 +100,7 @@ export const BookingProvider = ({ children }) => {
       });
   };
 
-  const bookaVendor = (vendorDetails) => {
+  const bookaVendor = (vendorDetails, eventType) => {
     const businessInfo = vendorDetails;
     const { fullDay, hourly, perHead, perItem, other } =
       businessInfo.paymentPlan;
@@ -100,7 +110,7 @@ export const BookingProvider = ({ children }) => {
       eventTitle: user?.data.firstName + " " + user?.data.lastName,
       service: {
         spaceLayout: enquireNowDetails.layout,
-        type: "vendor",
+        type: "Service",
         serviceId: businessInfo._id,
         serviceOwnerId: businessInfo.userId,
         price:
@@ -116,13 +126,15 @@ export const BookingProvider = ({ children }) => {
         flexible: false,
       },
       event: {
-        type: searchValue,
+        type: eventType,
         numberOfGuests: enquireNowDetails.people,
         endTime: enquireNowDetails.dateAndTime.endTime,
         startTime: enquireNowDetails.dateAndTime.startTime,
         date: enquireNowDetails.dateAndTime.date,
       },
     };
+
+    console.log(details);
     // Add data to formData
     const value = { data: JSON.stringify(details) };
 
@@ -134,6 +146,9 @@ export const BookingProvider = ({ children }) => {
         },
       })
       .then((res) => {
+        toast.show("Enquiry has been made", {
+          type: "success",
+        });
         console.log(res.data);
       })
       .catch((err) => {
@@ -141,9 +156,7 @@ export const BookingProvider = ({ children }) => {
       });
   };
 
-  const enquireNow = () => {
-    console.log(enquireNowDetails);
-  };
+  const enquireNow = () => {};
   return (
     <BookingContext.Provider
       value={{

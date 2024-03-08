@@ -38,10 +38,10 @@ const Notification = ({ navigation }) => {
                 ellipsizeMode="tail"
                 className="font-semibold text-xs w-full"
               >
-                {item.message.split(".")[0]}
+                {item.message?.split(".")[0]}
               </Text>
               <Text className="font-medium text-xs text-stone-300 text-left">
-                {item.message.split(".")[1].trim()}
+                {item.message?.split(".")[1].trim()}
               </Text>
             </View>
             <Text className="text-[10px] mt-2">
