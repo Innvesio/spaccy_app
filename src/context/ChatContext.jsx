@@ -140,7 +140,6 @@ export const ChatProvider = ({ children }) => {
     name,
     navigation
   ) => {
-    console.log(Eventdetails);
     const details = {
       receiverId: receiverId,
       bookingDetails: {
@@ -164,7 +163,8 @@ export const ChatProvider = ({ children }) => {
       })
       .then((res) => {
         setCurrentConversation(res.data.data);
-        sendMessage("text");
+        sendMessage("text", res.data.data._id);
+        navigation.navigate("Messages");
       })
       .catch((err) => console.log(err.response.data));
   };

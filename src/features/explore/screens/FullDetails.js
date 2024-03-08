@@ -113,14 +113,14 @@ const FullDetails = ({ route, navigation }) => {
           {/* Pricing */}
           <PricingCard details={details} />
           {/*  */}
-          <View>
+          {/* <View>
             <Text className="font-bold text-lg truncate mt-5">CAPACITY</Text>
             <View>
-              {/* <View>
+              <View>
                 <Standing width={20} height={20} />
-              </View> */}
+              </View>
             </View>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
       <EnquireBottomSheet

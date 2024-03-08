@@ -2,6 +2,7 @@ import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import env from "../constants/env";
 import { AuthContext } from "./AuthContext";
+import { useToast } from "react-native-toast-notifications";
 
 export const BookingContext = createContext();
 
@@ -12,6 +13,7 @@ export const BookingProvider = ({ children }) => {
   const [bookingSuccess, setBookingSuccess] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [getBookingsIsLoading, setGetBookingsIsLoading] = useState(false);
+  const toast = useToast();
   const [enquireNowDetails, setEnquireNowDetails] = useState({
     layout: "",
     people: 0,
@@ -78,6 +80,9 @@ export const BookingProvider = ({ children }) => {
       })
       .then((res) => {
         console.log(res.data);
+        toast.show("Enquiry has been made", {
+          type: "success",
+        });
         setBookingSuccess(true);
       })
       .catch((err) => {

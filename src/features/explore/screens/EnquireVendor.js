@@ -34,10 +34,6 @@ const EnquireVendor = ({ route, navigation }) => {
   const { user } = useContext(AuthContext);
   const details = route.params;
 
-  useEffect(() => {
-    console.log(details);
-  }, []);
-
   navigation.setOptions({
     headerTitleAlign: "left",
     headerTitle: (props) => (
