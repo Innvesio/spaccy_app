@@ -15,7 +15,7 @@ export default function CustomInput({
   return (
     <View className="w-full flex">
       {label && (
-        <Text className="text-stone-900 font-medium capitalize pb-[4px]">
+        <Text className="text-stone-900 font-medium capitalize pb-[9px]">
           {label}
         </Text>
       )}

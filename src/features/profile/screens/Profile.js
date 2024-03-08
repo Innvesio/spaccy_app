@@ -74,7 +74,10 @@ const Profile = ({ navigation }) => {
       {/* Profile Image */}
       <View className="w-full flex items-center mt-7">
         <View className="w-40 h-40">
-          <ProfilePicture firstLetter={user?.data.firstName[0]} />
+          <ProfilePicture
+            image={user?.data.profilePhoto[0]?.url}
+            firstLetter={user?.data.firstName[0]}
+          />
         </View>
         <Text className="font-semibold text-xl mt-2">
           {user?.data.firstName + " " + user?.data.lastName}

@@ -14,27 +14,32 @@ import PricingCard from "../components/ui/PricingCard";
 import { BackButton, Primarybutton } from "../../../components";
 import EnquireBottomSheet from "../components/modal/EnquireBottomSheet";
 import { BookingContext } from "../../../context/BookingContext";
+import VendorPricingCard from "../components/ui/cards/VendorPricingCard";
+import { SpaceContext } from "../../../context/SpaceContext";
 
 // import { Standing } from "../../../../assets/shapes/shapes.js";
 
-const FullDetails = ({ route, navigation }) => {
+const VendorFullDetails = ({ route, navigation }) => {
   const { enquireNow } = useContext(BookingContext);
+  const { searchValue } = useContext(SpaceContext);
   const details = route.params;
   // ref
   const bottomSheetRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
+  const businessInfo = details.businessInfo[0];
+  const vendorProfile = details.vendorProfile[0];
+  const { fullDay, hourly, perHead, perItem, other } = businessInfo.paymentPlan;
+
   navigation.setOptions({
-    title: details.spaceName + " — " + details.venueInfo.venueName,
+    title:
+      details.vendorProfile[0].businessName +
+      " — " +
+      details.businessInfo[0].businessName,
+
     headerLeft: () => <BackButton onPress={() => navigation.pop()} />,
   });
-
-  // / callbacks
-  const handleSheetChanges = useCallback((index) => {
-    bottomSheetRef.current?.snapToIndex(index);
-    setModalIsOpen(true);
-  }, []);
 
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
@@ -44,7 +49,7 @@ const FullDetails = ({ route, navigation }) => {
 
   const screenWidth = Dimensions.get("window").width;
   const renderDotIndicator = () => {
-    return details.images.map((dot, index) => {
+    return details.businessInfo[0].images.map((dot, index) => {
       return (
         <View
           key={index}
@@ -77,13 +82,13 @@ const FullDetails = ({ route, navigation }) => {
     <View className="flex-1 bg-white ">
       <ScrollView
         // className="opacity-1"
-        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       >
         <View className=" relative items-center">
           <FlatList
             className="rounded-b-2xl"
             showsHorizontalScrollIndicator={false}
-            data={details.images}
+            data={details.businessInfo[0].images}
             keyExtractor={(item) => item.id}
             horizontal
             pagingEnabled
@@ -98,29 +103,55 @@ const FullDetails = ({ route, navigation }) => {
           <View className="flex-row space-x-2">
             <Location color={appColors.primaryColor} />
             <Text className="font-semibold text-base truncate">
-              {details?.venueInfo.venueLocation.nearestLandmark +
-                " , " +
-                details?.venueInfo.venueLocation.city +
+              {vendorProfile.vendorLocation.city +
                 " " +
-                details?.venueInfo.venueLocation.state}
+                vendorProfile.vendorLocation.state}
             </Text>
           </View>
-          <Text className="font-medium text-base mt-7 truncate">18+</Text>
-          <View className="mt-5 space-y-3">
-            <Text className="font-bold text-lg truncate">ABOUT THE SPACE</Text>
-            <Text className="font-medium">{details?.spaceDescription}</Text>
-          </View>
-          {/* Pricing */}
-          <PricingCard details={details} />
-          {/*  */}
-          <View>
-            <Text className="font-bold text-lg truncate mt-5">CAPACITY</Text>
-            <View>
-              {/* <View>
-                <Standing width={20} height={20} />
-              </View> */}
+          <View className="items-start justify-center mt-10">
+            <View className="p-2 rounded-lg bg-gray-200">
+              <Text className="font-semibold text-sm capitalize  truncate">
+                {vendorProfile.serviceCategory}
+              </Text>
             </View>
           </View>
+          <View className="mt-5 space-y-3">
+            <Text className="font-bold text-lg truncate">
+              ABOUT THE SERVICE
+            </Text>
+            <Text className="font-medium">
+              {businessInfo.serviceDescription}
+            </Text>
+          </View>
+          <VendorPricingCard details={businessInfo} />
+          {/*  */}
+          <View className="py-6 space-y-4">
+            <View className="flex-row space-x-5">
+              <Text className="font-semibold truncate ">Price per hour</Text>
+              <Text className="font-bold  truncate ">
+                Starting from N{hourly.price}
+              </Text>
+            </View>
+            <View className="flex-row space-x-5">
+              <Text className="font-semibold truncate ">Price per day</Text>
+              <Text className="font-bold  truncate ">
+                Starting from N{fullDay.price}
+              </Text>
+            </View>
+            <View className="flex-row space-x-5">
+              <Text className="font-semibold truncate ">Price per item</Text>
+              <Text className="font-bold  truncate ">
+                Starting from N{perItem.price}
+              </Text>
+            </View>
+            <View className="flex-row space-x-5">
+              <Text className="font-semibold truncate ">Price per head</Text>
+              <Text className="font-bold  truncate ">
+                Starting from N{perHead.price}
+              </Text>
+            </View>
+          </View>
+          {/*  */}
         </View>
       </ScrollView>
       <EnquireBottomSheet
@@ -128,9 +159,11 @@ const FullDetails = ({ route, navigation }) => {
         setModalIsOpen={setModalIsOpen}
       />
       <View>
-        <View className="px-3 py-8 relative bg-white">
+        <View className="px-3 pb-8 pt-3 relative bg-white">
           <Primarybutton
-            onPress={() => navigation.navigate("Enquire", details)}
+            onPress={() =>
+              navigation.navigate("EnquireVendor", details.businessInfo[0])
+            }
             title="Enquire now"
           />
         </View>
@@ -139,4 +172,4 @@ const FullDetails = ({ route, navigation }) => {
   );
 };
 
-export default FullDetails;
+export default VendorFullDetails;

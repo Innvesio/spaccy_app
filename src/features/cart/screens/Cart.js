@@ -1,13 +1,22 @@
-import { View, Text, ScrollView, Image, RefreshControl } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  RefreshControl,
+  Pressable,
+} from "react-native";
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { CartContext } from "../../../context/CartContext";
 import { formatNumber } from "../../../utils/funcs/helpers";
 import { Primarybutton } from "../../../components";
+import { Trash } from "iconsax-react-native";
 
 const Cart = ({ navigation }) => {
   const { user } = useContext(AuthContext);
-  const { getCart, carts, getCartIsLoading } = useContext(CartContext);
+  const { getCart, carts, getCartIsLoading, removeCartItem } =
+    useContext(CartContext);
   useEffect(() => {
     getCart();
   }, []);
@@ -32,13 +41,13 @@ const Cart = ({ navigation }) => {
                   className="w-full h-full"
                 />
               </View>
-              <View className="justify-between items-start">
-                <View className="items-start">
+              <View className="justify-between flex-1 items-start">
+                <View className="items-start space-y-1">
                   <Text className="font-semibold text-base capitalize">
                     {item.itemName}
                   </Text>
-                  <View className="py-[2px] rounded-full px-4 bg-[#A0C6AB]">
-                    <Text className="font-normal  text-sm  ">
+                  <View className="py-[2px] rounded-full px-2 bg-[#A0C6AB]">
+                    <Text className="font-normal text-xs text-white">
                       {item.itemType}
                     </Text>
                   </View>
@@ -49,13 +58,25 @@ const Cart = ({ navigation }) => {
                   </Text>
                 </View>
               </View>
+              <Pressable
+                onPress={() => removeCartItem(item._id)}
+                className="p-2 justify-center items-center rounded-tr-xl rounded-br-xl h-full bg-stone-700"
+              >
+                <Trash variant="Bold" color="#fff" />
+              </Pressable>
             </View>
           ))}
         </View>
       </ScrollView>
       <View className="p-4">
         <View className="space-y-3">
-          <View>
+          <View className="flex-row justify-between items-center">
+            <Text className="font-semibold text-stone-600">Items:</Text>
+            <Text className="font-bold text-base text-stone-700">
+              {carts.length}
+            </Text>
+          </View>
+          <View className="flex-row justify-between items-center">
             <Text className="font-semibold text-stone-600">Discount:</Text>
             <Text className="font-bold text-base text-stone-700">40%</Text>
           </View>

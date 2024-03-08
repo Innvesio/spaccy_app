@@ -3,7 +3,6 @@ import React from "react";
 
 const BookingCard = ({
   status,
-  onPress,
   eventDate,
   eventStartTime,
   eventEndTime,
@@ -12,8 +11,8 @@ const BookingCard = ({
   eventTitle,
 }) => {
   return (
-    <TouchableNativeFeedback onPress={onPress}>
-      <View className="w-full shadow-sm p-4 bg-white rounded-lg border border-gray-200">
+    <View>
+      <View className="w-full p-4 bg-white rounded-lg border border-gray-200">
         <View
           className={`w-[100px] px-3 py-2 ${
             status === "confirmed"
@@ -56,7 +55,7 @@ const BookingCard = ({
           </View>
         </View>
       </View>
-    </TouchableNativeFeedback>
+    </View>
   );
 };
 

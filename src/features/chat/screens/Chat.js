@@ -16,7 +16,8 @@ import { ChatContext } from "../../../context/ChatContext";
 
 const Chat = ({ navigation }) => {
   const { user } = useContext(AuthContext);
-  const { conversations, getAllCoversations } = useContext(ChatContext);
+  const { conversations, getAllCoversations, getMessageIsLoading } =
+    useContext(ChatContext);
   navigation.setOptions({
     headerTitleAlign: "left",
     headerTitle: (props) => (
@@ -27,14 +28,8 @@ const Chat = ({ navigation }) => {
     headerLeft: () => <BackButton onPress={() => navigation.pop()} />,
   });
 
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      getAllCoversations();
-      setRefreshing(false);
-    }, 2000);
+  useEffect(() => {
+    getAllCoversations();
   }, []);
   return (
     <View className="flex-1 bg-white p-4">
@@ -42,7 +37,10 @@ const Chat = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={getMessageIsLoading}
+            onRefresh={getAllCoversations}
+          />
         }
       >
         {/* <Text className="font-bold text-3xl">Chats</Text> */}
@@ -58,17 +56,11 @@ const Chat = ({ navigation }) => {
           </View>
         </View>
         <View className="mt-5">
-          {/* Card */}
-          <FlatList
-            keyExtractor={(item) => item._id}
-            pagingEnabled
-            data={conversations}
-            renderItem={(item) => (
-              <View className="w-full ">
-                <ChatCard navigation={navigation} details={item} />
-              </View>
-            )}
-          />
+          {conversations.map((item, index) => (
+            <View key={index} className="w-full ">
+              <ChatCard navigation={navigation} details={item} />
+            </View>
+          ))}
         </View>
       </ScrollView>
     </View>

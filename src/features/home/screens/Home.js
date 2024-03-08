@@ -34,11 +34,27 @@ const Home = ({ navigation }) => {
     headerTitleAlign: "center",
     headerRight: () => (
       <View className="flex flex-row px-[18px] space-x-6">
-        <Notification color={appColors.primaryColor} />
-        <Message
-          onPress={() => navigation.navigate("Chat")}
-          color={appColors.primaryColor}
-        />
+        <View className="relative">
+          <View
+            style={{ zIndex: 900 }}
+            className="w-2 h-2 right-1 bg-red-500 absolute rounded-full"
+          ></View>
+          <Notification
+            onPress={() => navigation.navigate("Notifications")}
+            color={appColors.primaryColor}
+          />
+        </View>
+        <View className="relative">
+          <View
+            style={{ zIndex: 900 }}
+            className="w-2 h-2 -right-[1px] bg-red-500 absolute rounded-full"
+          ></View>
+
+          <Message
+            onPress={() => navigation.navigate("Messages")}
+            color={appColors.primaryColor}
+          />
+        </View>
       </View>
     ),
   });

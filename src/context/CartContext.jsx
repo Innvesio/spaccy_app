@@ -33,7 +33,7 @@ export const CartProvider = ({ children }) => {
   };
 
   // Get Cart
-  const removeItem = (cartId) => {
+  const removeCartItem = (cartId) => {
     const apiEndPoint = `${env.API_URL}/cart/${user?.data._id}`;
     axios
       .delete(apiEndPoint, {
@@ -43,7 +43,7 @@ export const CartProvider = ({ children }) => {
       })
       .then((res) => {
         console.log(res.data);
-        setCarts(res.data.data.filter((item) => item._id !== cartId));
+        setCarts(carts.filter((item) => item._id !== cartId));
       })
       .catch((err) => {
         console.log(err);
@@ -58,7 +58,7 @@ export const CartProvider = ({ children }) => {
         getCart,
         getCartIsLoading,
         setGetCartIsLoading,
-        removeItem,
+        removeCartItem,
       }}
     >
       {children}

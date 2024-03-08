@@ -27,9 +27,7 @@ const EnquireBottomSheet = ({
   bottomSheetRef,
 }) => {
   const { user } = useContext(AuthContext);
-  const { enquireNowDetails, setEnquireNowDetails } =
-    useContext(BookingContext);
-  const snapPoints = ["70%", "90%"];
+
   const [showModal, setShowModal] = useState("none");
 
   const today = new Date();
@@ -46,31 +44,6 @@ const EnquireBottomSheet = ({
     { key: "5", value: "U-Shaped" },
     { key: "6", value: "Board Products" },
   ];
-
-  const dateOption = {
-    textHeaderColor: appColors.mainColor,
-    textDefaultColor: appColors.mainColor,
-    selectedTextColor: "#fff",
-    mainColor: appColors.mainColor,
-    textSecondaryColor: appColors.mainColor,
-    borderColor: "rgba(122, 146, 165, 0.1)",
-  };
-
-  const setDate = (event, date) => {
-    const {
-      type,
-      nativeEvent: { timestamp, utcOffset },
-    } = event;
-    // setEnquireNowDetails((prev) => ({
-    //   ...prev,
-    //   dateAndTime: {
-    //     ...prev,
-    //     date: date,
-    //   },
-    // }));
-    // Your function logic here
-    console.log(date);
-  };
 
   const showPicker = () => {
     switch (showModal) {
@@ -106,18 +79,7 @@ const EnquireBottomSheet = ({
   };
   return (
     <>
-      <BottomSheet
-        backgroundStyle={{ backgroundColor: "#fff" }}
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        className="flex-1 bg-white backdrop-blur-3xl"
-        onChange={handleSheetChanges}
-        enablePanDownToClose={true}
-        onClose={() => setModalIsOpen(false)}
-        containerStyle={{
-          backgroundColor: modalIsOpen ? " rgba(0,0,0,0.6)" : "",
-        }}
-      >
+      <View>
         <View className="flex-1 bg-white space-y-3 ">
           <Modal
             animationType="fade"
@@ -259,7 +221,7 @@ const EnquireBottomSheet = ({
             </View>
           </ScrollView>
         </View>
-      </BottomSheet>
+      </View>
     </>
   );
 };

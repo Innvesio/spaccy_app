@@ -7,8 +7,12 @@ import { ChatContext } from "../../../../../context/ChatContext";
 
 const ChatCard = ({ details, navigation }) => {
   const { user } = useContext(AuthContext);
-  const { getAllConvoChats, setCurrentConversation } = useContext(ChatContext);
-  const ID = details.item?.members.find((id) => id !== user.data._id);
+  const { getAllConvoChats, setCurrentConversation, setReceiverId } =
+    useContext(ChatContext);
+  const ID = details.members.find((id) => id !== user?.data._id);
+  useEffect(() => {
+    setReceiverId(ID);
+  }, [ID]);
 
   const [receiver, setReceiver] = useState({});
   useEffect(() => {
@@ -25,30 +29,30 @@ const ChatCard = ({ details, navigation }) => {
           setReceiver(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.response.data);
         });
     };
-    if (ID) {
-      getUser();
-    }
+
+    getUser();
+    // }
   }, [ID]);
   return (
     <Pressable
       onPress={() => {
-        setCurrentConversation(details.item);
-        getAllConvoChats(details.item._id);
+        setCurrentConversation(details);
+        getAllConvoChats(details._id);
         navigation.navigate("Chats", {
-          details: details.item,
+          details: details,
           receiverDetails: receiver,
         });
       }}
       className="mt-3 w-full py-1 space-x-3 flex-row items-center"
     >
       <View className="w-14 h-14 rounded-full grid overflow-hidden  bg-[#A0C6AB]">
-        {receiver?.profilePhoto?.length >= 0 ? (
+        {receiver?.profilePhoto?.length > 0 ? (
           <Image
             className="w-full h-full"
-            source={{ uri: receiver.profilePhoto[0].url }}
+            source={{ uri: receiver.profilePhoto[0]?.url }}
             alt="image"
           />
         ) : (
@@ -62,13 +66,13 @@ const ChatCard = ({ details, navigation }) => {
         <Text className="font-semibold capitalize text-sm">
           {receiver.firstName + " " + receiver.lastName}
         </Text>
-        <Text className="text-sm text-gray-400">How are you doing?</Text>
+        {/* <Text className="text-sm text-gray-400">How are you doing?</Text> */}
       </View>
-      <View className="flex-1  p-3 items-end">
+      {/* <View className="flex-1  p-3 items-end">
         <View className="w-6 h-6 rounded-full justify-center items-center bg-stone-700">
           <Text className="font-bold text-white">3</Text>
         </View>
-      </View>
+      </View> */}
     </Pressable>
   );
 };

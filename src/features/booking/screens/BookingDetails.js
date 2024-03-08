@@ -4,9 +4,11 @@ import { BackButton } from "../../../components";
 import { Message } from "iconsax-react-native";
 import { BookingContext } from "../../../context/BookingContext";
 import { SpaceContext } from "../../../context/SpaceContext";
+import moment from "moment";
 
-const BookingDetails = ({ navigation }) => {
+const BookingDetails = ({ route, navigation }) => {
   const { getAllSpace } = useContext(SpaceContext);
+  const details = route.params;
   navigation.setOptions({
     title: "Details",
     headerLeft: () => <BackButton onPress={() => navigation.pop()} />,
@@ -24,18 +26,25 @@ const BookingDetails = ({ navigation }) => {
             <View className="space-y-1">
               <Text>Event Name</Text>
               <Text className="font-bold text-xl text-stone-400">
-                Clarence Aigbuza's event manager
+                {details?.eventTitle}'s {details?.event?.type}
               </Text>
             </View>
 
             <View className="w-full flex-row space-x-4">
               <View className="space-y-1">
                 <Text>Vendor</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {details?.service?.type ||
+                    details?.services?.filter(
+                      (service) => service.ownerId === user?.data?._id
+                    )[0]?.type}
+                </Text>
               </View>
               <View className="space-y-1">
                 <Text>Venue</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {details?.serviceData?.venueInfo?.name}
+                </Text>
               </View>
             </View>
             {/* Chat button */}
@@ -59,11 +68,16 @@ const BookingDetails = ({ navigation }) => {
             <View className="w-full flex-row space-x-4">
               <View className="space-y-1 flex-1">
                 <Text>Date</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {moment(details?.event?.date).format("MMMM DD, YYYY")}
+                </Text>
               </View>
               <View className="space-y-1 flex-1">
                 <Text>Time</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {moment(details?.event?.startTime, "x").format("hh:mm A")} -{" "}
+                  {moment(details?.event?.endTime, "x").format("hh:mm A")}{" "}
+                </Text>
               </View>
             </View>
           </View>
@@ -80,7 +94,9 @@ const BookingDetails = ({ navigation }) => {
             <View className="w-full flex-row space-x-4">
               <View className="space-y-1 flex-1">
                 <Text>Guest Count</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {details?.event.numberOfGuests} Gusets
+                </Text>
               </View>
               <View className="space-y-1 flex-1">
                 <Text>Attendees List</Text>
@@ -96,11 +112,17 @@ const BookingDetails = ({ navigation }) => {
             <View className="w-full flex-row space-x-4">
               <View className="space-y-1 flex-1">
                 <Text>Total Price</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  ₦
+                  {details?.service?.price?.toLocaleString() ||
+                    details?.paymentInfo?.amount?.toLocaleString()}
+                </Text>
               </View>
               <View className="space-y-1 flex-1">
                 <Text>Payment Status</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {details?.status === "confirmed" ? "Paid" : "Not Paid"}
+                </Text>
               </View>
             </View>
           </View>
@@ -117,15 +139,21 @@ const BookingDetails = ({ navigation }) => {
             <View className="w-full  space-y-9">
               <View className="space-y-1 flex-1">
                 <Text>Event Organizer</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {details?.client.name}
+                </Text>
               </View>
               <View className="space-y-1 flex-1">
                 <Text>Email</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {details?.client.email}
+                </Text>
               </View>
               <View className="space-y-1 flex-1">
                 <Text>Phone</Text>
-                <Text className="font-bold text-xl text-stone-400">Blank</Text>
+                <Text className="font-bold text-xl text-stone-400">
+                  {details?.client.phoneNumber || "N/A"}
+                </Text>
               </View>
             </View>
           </View>

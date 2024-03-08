@@ -11,7 +11,7 @@ const ProfilePicture = ({ image }) => {
         {image ? (
           <Image
             className="w-full h-full"
-            source={{ uri: image || user?.data.profilePhoto[0].url }}
+            source={{ uri: image || user?.data.profilePhoto[0]?.url }}
             alt="image"
           />
         ) : (

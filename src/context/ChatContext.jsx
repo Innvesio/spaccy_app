@@ -2,6 +2,7 @@ import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import env from "../constants/env";
 import { AuthContext } from "./AuthContext";
+import { io } from "socket.io-client";
 
 export const ChatContext = createContext();
 
@@ -10,9 +11,42 @@ export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [currentConversation, setCurrentConversation] = useState({});
-  const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [receiverId, setReceiverId] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [getMessageIsLoading, setGetMessageIsLoading] = useState(false);
   const [currentConvoMessages, setCurrentConvoMessage] = useState([]);
+  const [arrivalMessage, setArrivalMessage] = useState({
+    senderId: "",
+    createdAt: "",
+    messageType: "",
+    message: "",
+    invoiceDetails: {
+      additionalCost: "",
+      extra: "",
+      cost: "",
+      comment: "",
+      yourServices: [],
+    },
+  });
+  const [newMessage, setNewMessage] = useState({
+    messageType: "",
+    message: "",
+    bookingDetails: {
+      numberOfGeusts: "",
+      type: "",
+    },
+    invoiceDetails: {
+      extra: "",
+      cost: "",
+      comment: "",
+      yourServices: [],
+    },
+  });
+
+  useEffect(() => {
+    setSocket(io("http://192.168.8.100:8000"));
+  }, []);
 
   const getAllConversations = () => {
     axios
@@ -49,6 +83,7 @@ export const ChatProvider = ({ children }) => {
 
   // Function to get all conversations
   const getAllCoversations = () => {
+    setGetMessageIsLoading(true);
     axios
       .get(`${env.API_URL}/chat/conversations`, {
         headers: {
@@ -57,28 +92,30 @@ export const ChatProvider = ({ children }) => {
       })
       .then((res) => {
         console.log(res.data);
+        setGetMessageIsLoading(false);
         setConversations(res.data.data);
       })
       .catch((err) => {
+        setGetMessageIsLoading(false);
         console.log(err.response.data);
       });
   };
 
   // Function to get all conversations
-  const sendMessage = (convoId) => {
-    const msg = {
-      senderId: user.data._id,
-      message: newMessage,
-      conversationId: convoId || currentConversation._id,
-      messageType: "text",
-      createdAt: new Date(),
-    };
-    setMessages((prev) => [...prev, msg]);
+  const sendMessage = (type, convoId) => {
     const details = {
-      message: newMessage,
+      message: newMessage.message,
       conversationId: convoId || currentConversation._id,
-      messageType: "text",
+      messageType: type || "text",
     };
+    socket.emit?.("send_message", {
+      senderId: user.data._id,
+      receiverId: receiverId,
+      message: newMessage.message,
+      invoiceDetails: newMessage.invoiceDetails,
+      messageType: "text",
+      bookingDetails: newMessage.bookingDetails,
+    });
     axios
       .post(`${env.API_URL}/chat/send`, details, {
         headers: {
@@ -86,13 +123,50 @@ export const ChatProvider = ({ children }) => {
         },
       })
       .then((res) => {
-        setNewMessage("");
+        setNewMessage((prev) => ({ ...prev, message: "" }));
         getAllConvoChats(currentConversation._id);
         console.log(res.data);
       })
       .catch((err) => {
         console.log(err.response.data);
       });
+  };
+
+  const createConvasation = (
+    type,
+    mainId,
+    receiverId,
+    Eventdetails,
+    name,
+    navigation
+  ) => {
+    console.log(Eventdetails);
+    const details = {
+      receiverId: receiverId,
+      bookingDetails: {
+        type: type,
+        mainId: mainId,
+        eventStartTime: Eventdetails.eventStartTime,
+        eventEndTime: Eventdetails.eventEndTime,
+        numberOfGuests: Eventdetails.numberOfGuests,
+        eventDate: Eventdetails.eventDate,
+        eventType: Eventdetails.eventType,
+        eventTitle: Eventdetails.eventTitle,
+        bookedName: name,
+      },
+    };
+
+    axios
+      .post(`${env.API_URL}/chat/create/convo`, details, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((res) => {
+        setCurrentConversation(res.data.data);
+        sendMessage("text");
+      })
+      .catch((err) => console.log(err.response.data));
   };
 
   useEffect(() => {
@@ -117,6 +191,13 @@ export const ChatProvider = ({ children }) => {
         setCurrentConversation,
         currentConvoMessages,
         setCurrentConvoMessage,
+        socket,
+        createConvasation,
+        arrivalMessage,
+        setArrivalMessage,
+        setReceiverId,
+        receiverId,
+        getMessageIsLoading,
       }}
     >
       {children}
