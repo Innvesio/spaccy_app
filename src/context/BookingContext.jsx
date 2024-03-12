@@ -29,24 +29,24 @@ export const BookingProvider = ({ children }) => {
   const getBookings = () => {
     setGetBookingsIsLoading(true);
     axios
-      .get(`${env.API_URL}/booking/${user.data._id}/all`, {
+      .get(`${env.API_URL}/booking/${user.data?._id}/all`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       })
       .then((res) => {
-        const allBookings = res?.data.data;
+        // const allBookings = res?.data?.data;
 
-        let thisUserBookingHistory = [];
-        for (let i = 0; i < allBookings.length; i++) {
-          const { client } = allBookings[i];
-          if (client.id === user.data._id) {
-            thisUserBookingHistory.push(allBookings[i]);
-          }
-        }
+        // let thisUserBookingHistory = [];
+        // for (let i = 0; i < allBookings.length; i++) {
+        //   const { client } = allBookings[i];
+        //   if (client.id === user.data?._id) {
+        //     thisUserBookingHistory.push(allBookings[i]);
+        //   }
+        // }
 
         setGetBookingsIsLoading(false);
-        setBookings(thisUserBookingHistory);
+        setBookings(res?.data.data);
       })
       .catch((err) => {
         console.log(err);

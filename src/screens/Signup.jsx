@@ -9,20 +9,50 @@ import React, { useState } from "react";
 import { Lock, Profile, Sms } from "iconsax-react-native";
 import { CustomInput, Primarybutton } from "../components";
 import CheckBox from "expo-checkbox";
-import {  SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native";
+import axios from "axios";
+import { useToast } from "react-native-toast-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Signup = ({navigation}) => {
+const Signup = ({ navigation }) => {
   const [terms, setTerms] = useState(false);
-  const [loginData, setLoginData] = useState({
+  const toast = useToast();
+  const [loading, setLoading] = useState(false);
+  const [signupData, setSignupData] = useState({
     email: "",
     password: "",
+    firstName: "",
+    lastName: "",
+    accountType: "eventE",
   });
-  const [showPass, setShowPass] = useState("password");
+  const [showPass, setShowPass] = useState(false);
 
-  const handleChange = (e) => {
-    setLoginData((prevValue) => {
-      return { ...prevValue, [e.target.name]: e.target.value };
-    });
+  const submit = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${env.API_URL}/auth/signup`,
+        loginData
+      );
+      if (response.data) {
+        setLoading(false);
+        console.log(response.data);
+        const jsonValue = JSON.stringify(response.data);
+        await AsyncStorage.setItem("user", jsonValue);
+        navigation.navigate("Main");
+      } else {
+        console.log("not working");
+      }
+    } catch (err) {
+      setLoading(false);
+      toast.show(
+        err.response ? err.response.data.error : "Sorry,please try again",
+        {
+          type: "danger",
+          dangerColor: "#ff5c5c",
+        }
+      );
+    }
   };
   return (
     <SafeAreaView className="flex-1">
@@ -46,12 +76,18 @@ const Signup = ({navigation}) => {
               <View className="w-full flex items-center justify-center mt-10 p-7 rounded-2xl border border-gray-200 bg-white">
                 <View className="w-full flex justify-between items-center  space-y-5">
                   <CustomInput
+                    onChangeText={(val) =>
+                      setSignupData((prev) => ({ ...prev, firstName: val }))
+                    }
                     icon={<Profile color="#504B44" />}
                     placeholder="John"
                     label="First Name"
                   />
                   <View className="w-full">
                     <CustomInput
+                      onChangeText={(val) =>
+                        setSignupData((prev) => ({ ...prev, lastName: val }))
+                      }
                       icon={<Profile color="#504B44" />}
                       placeholder="Deo"
                       label="Last Name"
@@ -59,6 +95,9 @@ const Signup = ({navigation}) => {
                   </View>
                   <View className="w-full">
                     <CustomInput
+                      onChangeText={(val) =>
+                        setSignupData((prev) => ({ ...prev, email: val }))
+                      }
                       icon={<Sms color="#504B44" />}
                       placeholder="Email"
                       label="Email Address"
@@ -66,6 +105,9 @@ const Signup = ({navigation}) => {
                   </View>
                   <View className="w-full flex items-end gap-2">
                     <CustomInput
+                      nChangeText={(val) =>
+                        setSignupData((prev) => ({ ...prev, email: val }))
+                      }
                       icon={<Lock color="#504B44" />}
                       placeholder="Enter Password"
                     />
@@ -92,9 +134,9 @@ const Signup = ({navigation}) => {
                     <Text>
                       I have read, accepted and agreed to the
                       <Text href="/signup" className="font-bold underline">
-                      {" "}
-                      Terms and Conditions and Privacy Policy.
-                    </Text>
+                        {" "}
+                        Terms and Conditions and Privacy Policy.
+                      </Text>
                     </Text>
                   </View>
                 </View>
@@ -104,10 +146,13 @@ const Signup = ({navigation}) => {
                 </View>
                 <Text className="text-xs mt-5">
                   Already have an account?
-                  <Text onPress={() => navigation.navigate("Login")} className="font-bold">
-                  {" "}
-                  Log in here
-                </Text>
+                  <Text
+                    onPress={() => navigation.navigate("Login")}
+                    className="font-bold"
+                  >
+                    {" "}
+                    Log in here
+                  </Text>
                 </Text>
               </View>
             </View>

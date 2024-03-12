@@ -17,6 +17,7 @@ import InvoiceCard from "../components/ui/card/InvoiceCard";
 import { AuthContext } from "../../../context/AuthContext";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useToast } from "react-native-toast-notifications";
 
 const Chats = ({ route, navigation }) => {
   const {
@@ -67,7 +68,7 @@ const Chats = ({ route, navigation }) => {
 
   useEffect(() => {
     socket?.on("get_message", (data) => {
-      console.log(data);
+      console.log("Get message");
       setArrivalMessage({
         message: data.message,
         senderId: data.senderId,

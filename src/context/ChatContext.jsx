@@ -17,6 +17,7 @@ export const ChatProvider = ({ children }) => {
   const [getMessageIsLoading, setGetMessageIsLoading] = useState(false);
   const [currentConvoMessages, setCurrentConvoMessage] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState({
+    blankId: "",
     senderId: "",
     createdAt: "",
     messageType: "",

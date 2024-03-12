@@ -1,11 +1,51 @@
 import { View, Text, Pressable } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { formatNumber } from "../../../../../utils/funcs/helpers.js";
 import { ChatContext } from "../../../../../context/ChatContext.jsx";
 import moment from "moment";
+import { AuthContext } from "../../../../../context/AuthContext.jsx";
+import env from "../../../../../constants/env.js";
+import axios from "axios";
+import { useToast } from "react-native-toast-notifications";
 
 const InvoiceCard = ({ details }) => {
   const { currentConversation } = useContext(ChatContext);
+  const { user } = useContext(AuthContext);
+  const toast = useToast();
+  const [isLoading, setIsloading] = useState(false);
+
+  const addToCart = () => {
+    setIsloading(true);
+
+    const data = {
+      itemType: currentConversation.bookingDetails.type,
+      finalizedPrice: details.invoiceDetails.additionalCost
+        ? details.invoiceDetails.cost +
+          parseInt(details.invoiceDetails.additionalCost)
+        : details.invoiceDetails.cost,
+      itemId: currentConversation.bookingDetails.mainId,
+      itemName: currentConversation.bookingDetails.bookedName,
+    };
+
+    axios
+      .post(`${env.API_URL}/cart/${user?.data._id}/new`, data, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setIsloading(true);
+        toast.show("Added to your cart", {
+          type: "success",
+        });
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setIsloading(true);
+        // toast.error("Clould not add to Chart");
+      });
+  };
   return (
     <View className="max-w-[70%] w-full p-3">
       <View className="-full space-y-4 p-4 bg-white border rounded-lg border-black text-left">
@@ -86,7 +126,10 @@ const InvoiceCard = ({ details }) => {
               Decline
             </Text>
           </Pressable>
-          <Pressable className="px-6 py-3 w-full bg-stone-700 rounded justify-center items-center disabled:bg-opacity-85">
+          <Pressable
+            onPress={() => addToCart()}
+            className="px-6 py-3 w-full bg-stone-700 rounded justify-center items-center disabled:bg-opacity-85"
+          >
             <Text className="text-center text-white truncate text-xs font-semibold ">
               Proceed to Checkout
             </Text>

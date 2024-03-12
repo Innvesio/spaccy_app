@@ -15,7 +15,7 @@ import { Trash } from "iconsax-react-native";
 
 const Cart = ({ navigation }) => {
   const { user } = useContext(AuthContext);
-  const { getCart, carts, getCartIsLoading, removeCartItem } =
+  const { getCart, carts, getCartIsLoading, removeCartItem, newData } =
     useContext(CartContext);
   useEffect(() => {
     getCart();
@@ -33,7 +33,7 @@ const Cart = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         <View className="px-3">
-          {carts.map((item, index) => (
+          {newData.map((item, index) => (
             <View key={index} className="w-full space-x-4  py-3  flex-row ">
               <View className="rounded-xl w-[100px] overflow-hidden h-[100px] bg-slate-500">
                 <Image

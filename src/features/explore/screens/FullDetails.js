@@ -5,23 +5,27 @@ import {
   Dimensions,
   Image,
   ScrollView,
+  Pressable,
 } from "react-native";
 import React, { useCallback, useContext, useRef, useState } from "react";
-import { Location } from "iconsax-react-native";
+import { Heart, Location } from "iconsax-react-native";
 import { appColors } from "../../../constants/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import PricingCard from "../components/ui/PricingCard";
 import { BackButton, Primarybutton } from "../../../components";
 import EnquireBottomSheet from "../components/modal/EnquireBottomSheet";
 import { BookingContext } from "../../../context/BookingContext";
+import { SpaceContext } from "../../../context/SpaceContext";
 
 // import { Standing } from "../../../../assets/shapes/shapes.js";
 
 const FullDetails = ({ route, navigation }) => {
   const { enquireNow } = useContext(BookingContext);
+  const { isSaved, setIsSaved, addToSaved } = useContext(SpaceContext);
   const details = route.params;
   // ref
   const bottomSheetRef = useRef(null);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -95,15 +99,26 @@ const FullDetails = ({ route, navigation }) => {
           </View>
         </View>
         <View className="px-3 pt-6 ">
-          <View className="flex-row space-x-2">
+          <View className="flex-row space-x-2 items-center">
             <Location color={appColors.primaryColor} />
             <Text className="font-semibold text-base truncate">
-              {details?.venueInfo.venueLocation.nearestLandmark +
+              {details?.venueInfo.venueLocation?.nearestLandmark +
                 " , " +
                 details?.venueInfo.venueLocation.city +
                 " " +
                 details?.venueInfo.venueLocation.state}
             </Text>
+            <View className="flex-1 items-end">
+              <Pressable
+                onPress={() => (isSaved ? "" : addToSaved(details))}
+                className="p-2 rounded-full bg-stone-200"
+              >
+                <Heart
+                  variant={isSaved ? "Bold" : "Outline"}
+                  color={appColors.primaryColor}
+                />
+              </Pressable>
+            </View>
           </View>
           <Text className="font-medium text-base mt-7 truncate">18+</Text>
           <View className="mt-5 space-y-3">

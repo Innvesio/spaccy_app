@@ -1,5 +1,14 @@
-import { View, Text, TextInput, Image, ScrollView } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  image,
+  ScrollView,
+  FlatList,
+  Dimensions,
+  RefreshControl,
+} from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Message,
   Notification,
@@ -10,26 +19,18 @@ import {
 import { appColors } from "../../../constants/colors";
 import VendorPreview from "../components/ui/card/VendorPreview";
 import { InputWithIcon } from "../../../components";
+import { SpaceContext } from "../../../context/SpaceContext";
+import SpacePreviewCard from "../components/ui/card/SpacePreviewCard";
 
 const Home = ({ navigation }) => {
-  const [vendors, setVendors] = useState([
-    {
-      name: "Ella Malie",
-      service: "Event Planner",
-      image: require("../../../../assets/persons/image3.jpeg"),
-    },
+  const screenWidth = Dimensions.get("window").width;
+  const { getAllSpaces, allSpaces, allVendors, fetchAllVendors } =
+    useContext(SpaceContext);
+  useEffect(() => {
+    getAllSpaces();
+    fetchAllVendors();
+  }, []);
 
-    {
-      name: "Osen Waine",
-      service: "DJ",
-      image: require("../../../../assets/persons/image2.jpeg"),
-    },
-    {
-      name: "Victor oden",
-      service: "Lover Boy",
-      image: require("../../../../assets/persons/image.jpeg"),
-    },
-  ]);
   navigation.setOptions({
     headerTitleAlign: "center",
     headerRight: () => (
@@ -59,64 +60,71 @@ const Home = ({ navigation }) => {
     ),
   });
 
+  const refresh = () => {
+    getAllSpaces();
+  };
+
   return (
-    <View className="py-[24px] bg-white flex-1">
-      <View className="px-[24px]">
-        {/* Search Bar */}
-        <InputWithIcon
-          icon={<SearchNormal color={appColors.primaryColor} />}
-          placeholder="Search for space"
-        />
-        {/*End of Search Bar */}
-      </View>
-      <View className="mt-5 ">
-        {/* Card */}
-        <View className="px-[24px]">
-          <View className="w-full bg-slate-400 relative h-[240px] overflow-hidden  rounded-xl ">
-            <Image
-              className="w-full absolute h-full"
-              source={require("../../../../assets/R.jpeg")}
-            />
-            <View className="w-full p-4">
-              <View className="w-28 rounded-full bg-white h-8">
-                <Text className="m-auto font-medium">Nearby</Text>
+    <View className=" bg-white flex-1">
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={refresh} />
+        }
+        showsVerticalScrollIndicator={false}
+        className="pt-[24px]"
+      >
+        <View className="px-[10px]">
+          <InputWithIcon
+            icon={<SearchNormal color={appColors.primaryColor} />}
+            placeholder="Search for space"
+          />
+        </View>
+        <View className="mt-5 ">
+          {/* Card */}
+
+          {/*End of Card */}
+          <View className="w-full mt-10 space-y-2">
+            <View className="px-[10px]">
+              <Text className="font-bold">Vendors</Text>
+            </View>
+            <View className=" h-[100px]  py-1 ">
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                className="pl-3"
+                data={allVendors}
+                renderItem={(item) => (
+                  <View
+                    style={{ width: screenWidth / 1.3 }}
+                    className="w-[400px] mr-4"
+                    key={item.index}
+                  >
+                    <VendorPreview
+                      navigation={navigation}
+                      image={item.item?.images[0]?.url}
+                      name={item.item.businessName}
+                      service="Service"
+                      details={item.item}
+                    />
+                  </View>
+                )}
+              />
+            </View>
+          </View>
+        </View>
+        <View className="mt-10">
+          <View className="px-[10px] mb-5">
+            <Text className="font-bold">Spaces</Text>
+          </View>
+          <View className="space-y-10">
+            {allSpaces.map((item, index) => (
+              <View key={index}>
+                <SpacePreviewCard navigation={navigation} details={item} />
               </View>
-            </View>
-          </View>
-          <View className="flex flex-row justify-between mt-4">
-            <Text className="font-semibold">Declust bunny</Text>
-            <View className="flex flex-row justify-center items-center space-x-1">
-              <Star1 size={20} variant="Bold" color="gold" />
-              <Text>5.0</Text>
-            </View>
+            ))}
           </View>
         </View>
-        {/*End of Card */}
-        <View className="w-full mt-10 space-y-2">
-          <View className="px-[24px]">
-            <Text className="font-bold">Vendors</Text>
-          </View>
-          <View className=" h-[100px]  py-1">
-            <ScrollView
-              showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
-              showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
-              horizontal
-              className="space-x-4 px-[24px]"
-            >
-              {vendors.map((item, index) => (
-                <View key={index}>
-                  <VendorPreview
-                    image={item.image}
-                    name={item.name}
-                    service={item.service}
-                    key={index}
-                  />
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

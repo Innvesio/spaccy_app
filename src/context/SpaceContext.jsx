@@ -1,6 +1,8 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import env from "../constants/env";
+import { AuthContext } from "./AuthContext";
+import { useToast } from "react-native-toast-notifications";
 
 export const SpaceContext = createContext();
 
@@ -8,26 +10,42 @@ export const SpaceProvider = ({ children }) => {
   const [searchValue, setSearchValue] = useState("Wedding Ceremony");
   const [searchResult, setSearchResult] = useState([]);
   const [searchIsLoading, setSearchIsLoading] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [searchOptions, setSearchOptions] = useState({
     searchType: "space",
     capacity: "8",
     location: "Lagos",
     service: "",
   });
+  const toast = useToast();
   const [spaces, setSpaces] = useState([]);
+  const [allSpaces, setAllSpaces] = useState([]);
+  const [allVendors, setAllVendors] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [eventTypes, setEventTypes] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
+  const { user } = useContext(AuthContext);
 
-  const allSpaces = () => {
-    const endPoint = process.env.API_URL;
+  const getAllSpaces = () => {
+    axios
+      .get(`${env.API_URL}/space/all`, {
+        headers: {
+          Authorization: `Bearea ${user.token}`,
+        },
+      })
+      .then((res) => {
+        setAllSpaces(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
   };
 
   const getAllEventTypes = () => {
     axios
       .get(`${env.API_URL}/search/event_type`)
       .then((res) => {
-        setEventTypes(res.data);
+        setServiceTypes(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -90,6 +108,21 @@ export const SpaceProvider = ({ children }) => {
       });
   };
 
+  const fetchAllVendors = () => {
+    axios
+      .get(`${env.API_URL}/business`, {
+        headers: {
+          Authorization: `Bearea ${user.token}`,
+        },
+      })
+      .then((res) => {
+        setAllVendors(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
+
   const searchByType = () => {
     if (searchOptions.searchType === "service") {
       fetchVendors();
@@ -98,6 +131,55 @@ export const SpaceProvider = ({ children }) => {
       getAllServiceTypes();
       fetchSpaces();
     }
+  };
+
+  const addToSaved = (details) => {
+    const data = {
+      venueDetails: details,
+      userId: user.data._id,
+    };
+    axios
+      .post(`${env.API_URL}/venue/space/${details._id}/save`, details, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((res) => {
+        setIsSaved(true);
+        toast.show("Added to saved", {
+          type: "success",
+        });
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        toast.show("Could not add to saved", {
+          type: "danger",
+        });
+      });
+  };
+  const removeFromSaved = (id) => {
+    const data = {
+      venueDetails: details,
+      userId: user.data._id,
+    };
+    axios
+      .delete(`${env.API_URL}/venue/space/saved/${id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((res) => {
+        setIsSaved(true);
+        toast.show("Remove from saved", {
+          type: "success",
+        });
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        toast.show("Could not remove from saved", {
+          type: "danger",
+        });
+      });
   };
 
   useEffect(() => {
@@ -125,6 +207,14 @@ export const SpaceProvider = ({ children }) => {
         searchResult,
         serviceTypes,
         vendors,
+        addToSaved,
+        removeFromSaved,
+        getAllSpaces,
+        allSpaces,
+        fetchAllVendors,
+        allVendors,
+        isSaved,
+        setIsSaved,
       }}
     >
       {children}

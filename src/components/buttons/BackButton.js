@@ -8,7 +8,7 @@ const BackButton = ({ onPress }) => {
     <TouchableOpacity
       onPress={onPress}
       // style={{ backgroundColor: appColors.primaryColor }}
-      className=" rounded-full"
+      className="relative -left-2 rounded-full"
     >
       <ArrowLeft2 size={25} strokeWidth={200} color={appColors.primaryColor} />
     </TouchableOpacity>

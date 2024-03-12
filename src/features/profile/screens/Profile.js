@@ -47,13 +47,13 @@ const Profile = ({ navigation }) => {
         <Notification size="26" color={appColors.primaryColor} variant="Bold" />
       ),
       title: "Notifications",
-      route: "EditProfile",
+      route: "Notifications",
       description: "Important information that we wouldn't want you to miss.",
     },
     {
       icon: <Save2 size="26" color={appColors.primaryColor} variant="Bold" />,
       title: "Saved spaces",
-      route: "EditProfile",
+      route: "Saved",
       description: "A complete list of all the spaces you have saved.",
     },
     {
@@ -65,7 +65,7 @@ const Profile = ({ navigation }) => {
         />
       ),
       title: "Help and support",
-      route: "EditProfile",
+      route: "Support",
       description: "Get answers to questions you may have.",
     },
   ];

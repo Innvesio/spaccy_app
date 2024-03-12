@@ -13,6 +13,8 @@ import {
   HomeScreen,
   MessagesScreen,
   NotificationScreen,
+  SavedScreen,
+  SupportScreen,
   VendorFullDetailsScreen,
 } from "./src/features";
 import { SpaceProvider } from "./src/context/SpaceContext";
@@ -73,6 +75,11 @@ export default function App() {
                             name="EditProfile"
                             component={EditProfile}
                           />
+                          <Stack.Screen
+                            name="Support"
+                            component={SupportScreen}
+                          />
+                          <Stack.Screen name="Saved" component={SavedScreen} />
                           {/* <Stack.Screen name="Cart" component={Cart} /> */}
                           <Stack.Screen name="Spaccy" component={HomeScreen} />
                           <Stack.Screen

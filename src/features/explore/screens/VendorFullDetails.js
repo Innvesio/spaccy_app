@@ -23,20 +23,22 @@ const VendorFullDetails = ({ route, navigation }) => {
   const { enquireNow } = useContext(BookingContext);
   const { searchValue } = useContext(SpaceContext);
   const details = route.params;
+  console.log(details);
   // ref
   const bottomSheetRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const businessInfo = details.businessInfo[0];
-  const vendorProfile = details.vendorProfile[0];
-  const { fullDay, hourly, perHead, perItem, other } = businessInfo.paymentPlan;
+  const businessInfo = details?.businessInfo[0];
+  const vendorProfile = details?.vendorProfile[0];
+  const { fullDay, hourly, perHead, perItem, other } =
+    businessInfo?.paymentPlan;
 
   navigation.setOptions({
     title:
-      details.vendorProfile[0].businessName +
+      details?.vendorProfile[0]?.businessName +
       " — " +
-      details.businessInfo[0].businessName,
+      details?.businessInfo[0]?.businessName,
 
     headerLeft: () => <BackButton onPress={() => navigation.pop()} />,
   });
@@ -49,7 +51,7 @@ const VendorFullDetails = ({ route, navigation }) => {
 
   const screenWidth = Dimensions.get("window").width;
   const renderDotIndicator = () => {
-    return details.businessInfo[0].images.map((dot, index) => {
+    return details?.businessInfo[0]?.images.map((dot, index) => {
       return (
         <View
           key={index}
@@ -88,7 +90,7 @@ const VendorFullDetails = ({ route, navigation }) => {
           <FlatList
             className="rounded-b-2xl"
             showsHorizontalScrollIndicator={false}
-            data={details.businessInfo[0].images}
+            data={details?.businessInfo[0]?.images}
             keyExtractor={(item) => item.id}
             horizontal
             pagingEnabled
@@ -103,15 +105,15 @@ const VendorFullDetails = ({ route, navigation }) => {
           <View className="flex-row space-x-2">
             <Location color={appColors.primaryColor} />
             <Text className="font-semibold text-base truncate">
-              {vendorProfile.vendorLocation.city +
+              {vendorProfile?.vendorLocation?.city +
                 " " +
-                vendorProfile.vendorLocation.state}
+                vendorProfile?.vendorLocation?.state}
             </Text>
           </View>
           <View className="items-start justify-center mt-10">
             <View className="p-2 rounded-lg bg-gray-200">
               <Text className="font-semibold text-sm capitalize  truncate">
-                {vendorProfile.serviceCategory}
+                {vendorProfile?.serviceCategory}
               </Text>
             </View>
           </View>
@@ -120,7 +122,7 @@ const VendorFullDetails = ({ route, navigation }) => {
               ABOUT THE SERVICE
             </Text>
             <Text className="font-medium">
-              {businessInfo.serviceDescription}
+              {businessInfo?.serviceDescription}
             </Text>
           </View>
           <VendorPricingCard details={businessInfo} />
@@ -162,7 +164,7 @@ const VendorFullDetails = ({ route, navigation }) => {
         <View className="px-3 pb-8 pt-3 relative bg-white">
           <Primarybutton
             onPress={() =>
-              navigation.navigate("EnquireVendor", details.businessInfo[0])
+              navigation.navigate("EnquireVendor", details?.businessInfo[0])
             }
             title="Enquire now"
           />
