@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Linking } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LoginScreen, SignupScreen } from "./src/screens";
@@ -26,6 +26,9 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BookingProvider } from "./src/context/BookingContext";
 import { CartProvider } from "./src/context/CartContext";
 import { NotificationProvider } from "./src/context/NotificationContext";
+import * as Notifications from "expo-notifications";
+import Terms from "./src/screens/Terms";
+import DeleteScreen from "./src/screens/DeleteScreen";
 
 // Stack
 const Stack = createNativeStackNavigator();
@@ -56,6 +59,11 @@ export default function App() {
                             component={SignupScreen}
                           />
                           <Stack.Screen
+                            options={{ headerShown: false }}
+                            name="DeleteScreen"
+                            component={DeleteScreen}
+                          />
+                          <Stack.Screen
                             name="FullDetails"
                             component={FullDetailsScreen}
                           />
@@ -75,6 +83,7 @@ export default function App() {
                             name="EditProfile"
                             component={EditProfile}
                           />
+                          <Stack.Screen name="Terms" component={Terms} />
                           <Stack.Screen
                             name="Support"
                             component={SupportScreen}

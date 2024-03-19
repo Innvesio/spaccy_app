@@ -58,32 +58,39 @@ const Saved = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         className="px-3 pt-5"
       >
-        {savedSpaces.map((item, index) => (
-          <View index={index} className="flex-row space-x-4">
-            <View className="bg-slate-400 overflow-hidden h-[100px] w-[100px] rounded-lg">
-              <Image
-                className="w-full h-full "
-                source={{ uri: item.coverPhoto }}
-              />
-            </View>
-            <View className="flex-1 justify-between">
-              <View>
-                <Text className="font-bold text-lg">{item.spaceName}</Text>
-                <Text className="text-sm">{item.address}</Text>
+        {savedSpaces.length <= 0 ? (
+          <View className="flex-1 justify-center pt-20 items-center">
+            <Text className="text-xl font-bold text-stone-300">
+              No saved found
+            </Text>
+          </View>
+        ) : (
+          savedSpaces.map((item, index) => (
+            <View index={index} className="flex-row space-x-4">
+              <View className="bg-slate-400 overflow-hidden h-[100px] w-[100px] rounded-lg">
+                <Image
+                  className="w-full h-full "
+                  source={{ uri: item.coverPhoto }}
+                />
               </View>
-              <View className="flex-wrap justify-start flex-row">
-                {item.features.map((item, index) => (
-                  <View>
-                    <View key={index} className="flex-row">
-                      <Text className="text-[10px] flex  font-semibold">
-                        {item}
-                      </Text>
-                      <Text>
-                        {" "}
-                        {/* {index !== item.features?.length - 1 ? "•" : ""}{" "} */}
-                      </Text>
-                    </View>
-                    {/* <View className="flex items-start text-sm">
+              <View className="flex-1 justify-between">
+                <View>
+                  <Text className="font-bold text-lg">{item.spaceName}</Text>
+                  <Text className="text-sm">{item.address}</Text>
+                </View>
+                <View className="flex-wrap justify-start flex-row">
+                  {item.features.map((item, index) => (
+                    <View>
+                      <View key={index} className="flex-row">
+                        <Text className="text-[10px] flex  font-semibold">
+                          {item}
+                        </Text>
+                        <Text>
+                          {" "}
+                          {/* {index !== item.features?.length - 1 ? "•" : ""}{" "} */}
+                        </Text>
+                      </View>
+                      {/* <View className="flex items-start text-sm">
                       {Array(2)
                         .fill()
                         .map(() => (
@@ -96,18 +103,19 @@ const Saved = ({ navigation }) => {
                         {rating.toFixed(1)} Rating
                       </Text>
                     </View> */}
-                  </View>
-                ))}
+                    </View>
+                  ))}
+                </View>
               </View>
+              <Pressable
+                onPress={() => removeFromSaved(item._id)}
+                className="justify-center rounded-r-lg bg-stone-700 px-1"
+              >
+                <Trash color="white" />
+              </Pressable>
             </View>
-            <Pressable
-              onPress={() => removeFromSaved(item._id)}
-              className="justify-center rounded-r-lg bg-stone-700 px-1"
-            >
-              <Trash color="white" />
-            </Pressable>
-          </View>
-        ))}
+          ))
+        )}
       </ScrollView>
     </View>
   );

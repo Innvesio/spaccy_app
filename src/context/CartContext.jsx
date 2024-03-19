@@ -58,7 +58,6 @@ export const CartProvider = ({ children }) => {
 
   // Function to create a new cart data to allow the implementation of discount prices
   const createNewData = async (cartItem) => {
-    setIsPaying(true);
     try {
       let data = [];
 
@@ -185,16 +184,30 @@ export const CartProvider = ({ children }) => {
     const details = {};
   };
 
+  const generateTransactionRef = (length) => {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return `flw_tx_ref_${result}`;
+  };
+
   return (
     <CartContext.Provider
       value={{
         carts,
+        generateTransactionRef,
         setCarts,
         getCart,
         getCartIsLoading,
         setGetCartIsLoading,
         removeCartItem,
         newData,
+        cartTotal,
+        setCartTotal,
       }}
     >
       {children}

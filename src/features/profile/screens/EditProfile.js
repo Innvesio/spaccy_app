@@ -26,7 +26,7 @@ const EditProfile = ({ navigation }) => {
   const toast = useToast();
   const { user, setUser, userEditableInfo, setUserEditableInfo } =
     useContext(AuthContext);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -34,6 +34,7 @@ const EditProfile = ({ navigation }) => {
       firstName: user.data.firstName,
       lastName: user.data.lastName,
       email: user.data.email,
+      profilePhoto: image,
     });
   }, []);
   navigation.setOptions({
@@ -49,43 +50,81 @@ const EditProfile = ({ navigation }) => {
       quality: 1,
     });
 
+    const file = result.assets[0];
+
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(file);
     }
   };
-  const updateUser = async () => {
+
+  const updateHandler = () => {
     setLoading(true);
-    try {
-      const response = await axios.patch(
-        `${env.API_URL}/auth/updateAuth/${user?.data._id}`,
-        userEditableInfo,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.data) {
-        setLoading(false);
-        toast.show("Account has been updated!", {
-          type: "success",
-        });
-        const jsonValue = JSON.stringify(response.data);
-        await AsyncStorage.setItem("user", jsonValue);
-        setUser(response.data);
-      }
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-      toast.show(
-        err.response ? err.response.data.error : "Could not update account",
-        {
-          type: "danger",
-        }
-      );
-    }
+
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "eketcwyc");
+
+    console.log(formData._parts[0]);
+
+    // axios
+    //   .post(`https://api.cloudinary.com/v1_1/doomrxmb0/upload`, formData)
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     setLoading(false);
+    //     toast.show(
+    //       err.response ? err.response.data.error : "Could not update account",
+    //       {
+    //         type: "danger",
+    //       }
+    //     );
+    //     console.log(err);
+    //   });
   };
+
+  // upload image variable
+  // const imageReq = {
+  //   profilePhoto: [
+  //     {
+  //       id: data.public_url,
+  //       url: data.secure_url,
+  //     },
+  //   ],
+  // };
+
+  // if (response.ok) {
+  //   try {
+  //     const response = await fetch(
+  //       `${env.API_URL}/auth/updateAuth/${user?.data._id}`,
+  //       {
+  //         method: "PATCH",
+  //         headers: {
+  //           Authorization: `Bearer ${user?.token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(imageReq),
+  //       }
+  //     );
+
+  //     const data = await response.json();
+  //     console.log("successful", data);
+  //     if (response.ok) {
+  //       setLoading(false);
+  //       toast.show("Account has been updated!", {
+  //         type: "success",
+  //       });
+  //       const jsonValue = JSON.stringify(response.data);
+  //       await AsyncStorage.setItem("user", jsonValue);
+  //       setUser(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
   return (
     <View className="bg-white  flex-1">
       <ScrollView
@@ -98,7 +137,7 @@ const EditProfile = ({ navigation }) => {
         <View className="w-full flex-1  flex items-center">
           <View className="p-[24px] w-full">
             <View className="w-40 h-40 m-auto relative ">
-              <ProfilePicture image={image} firstLetter={"S"} />
+              <ProfilePicture image={image?.uri} firstLetter={"S"} />
               <Pressable
                 onPress={() => pickImage()}
                 className="p-3 rounded-full absolute bg-gray-200 bottom-3 right-0"
@@ -146,7 +185,7 @@ const EditProfile = ({ navigation }) => {
           <View className=" h-full mt-20 px-[24px] flex justify-end flex-1 w-full">
             <Primarybutton
               disabled={loading}
-              onPress={updateUser}
+              onPress={updateHandler}
               title="Save Changes"
             />
           </View>

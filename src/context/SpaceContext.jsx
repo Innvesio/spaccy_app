@@ -45,7 +45,7 @@ export const SpaceProvider = ({ children }) => {
     axios
       .get(`${env.API_URL}/search/event_type`)
       .then((res) => {
-        setServiceTypes(res.data.data);
+        setEventTypes(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -55,6 +55,7 @@ export const SpaceProvider = ({ children }) => {
     axios
       .get(`${env.API_URL}/search/vendor_type`)
       .then((res) => {
+        console.log(res.data);
         setServiceTypes(res.data);
       })
       .catch((err) => {
@@ -98,7 +99,7 @@ export const SpaceProvider = ({ children }) => {
       )
       .then((res) => {
         setSearchIsLoading(false);
-        console.log("Vendor", res.data);
+        console.log("Vendor", [res.data]);
         setVendors([res.data]);
         setSearchResult([res.data]);
       })
@@ -124,12 +125,12 @@ export const SpaceProvider = ({ children }) => {
   };
 
   const searchByType = () => {
-    if (searchOptions.searchType === "service") {
-      fetchVendors();
+    if (searchOptions.searchType === "space") {
       getAllEventTypes();
-    } else {
-      getAllServiceTypes();
       fetchSpaces();
+    } else {
+      fetchVendors();
+      getAllServiceTypes();
     }
   };
 

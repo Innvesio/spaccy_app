@@ -67,6 +67,9 @@ export const BookingProvider = ({ children }) => {
       },
       client: {
         ...user?.data,
+        email: user?.data.email,
+        id: user?.data._id,
+        phoneNumber: user?.data.phoneNumber,
         message: enquireNowDetails.message,
         flexible: false,
       },

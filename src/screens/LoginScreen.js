@@ -25,8 +25,13 @@ const Login = ({ navigation }) => {
   const submit = async () => {
     setLoading(true);
     navigation.navigate("Main");
+
+    const data = {
+      email: loginData.email,
+      password: loginData.password.trim(),
+    };
     try {
-      const response = await axios.post(`${env.API_URL}/auth/login`, loginData);
+      const response = await axios.post(`${env.API_URL}/auth/login`, data);
       if (response.data) {
         setLoading(false);
         console.log(response.data);
@@ -86,7 +91,7 @@ const Login = ({ navigation }) => {
                 title="Login"
               />
             </View>
-            {/* <Text className="text-xs mt-5">
+            <Text className="text-xs mt-5">
               Don't have an account?
               <Text
                 onPress={() => navigation.navigate("Signup")}
@@ -95,7 +100,7 @@ const Login = ({ navigation }) => {
                 {" "}
                 Sign up here
               </Text>
-            </Text> */}
+            </Text>
             <Text className="text-xs font-bold mt-5">Forgot password?</Text>
           </View>
         </View>

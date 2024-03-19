@@ -16,6 +16,8 @@ import { ChatContext } from "../../../context/ChatContext";
 
 const Chat = ({ navigation }) => {
   const { user } = useContext(AuthContext);
+  const [searchValue, setSearchValue] = useState("");
+  const [filterdData, setFilterdData] = useState([]);
   const { conversations, getAllCoversations, getMessageIsLoading } =
     useContext(ChatContext);
   navigation.setOptions({
@@ -27,6 +29,15 @@ const Chat = ({ navigation }) => {
     ),
     headerLeft: () => <BackButton onPress={() => navigation.pop()} />,
   });
+
+  const handleSearch = (e) => {
+    const searchWord = e.target.value;
+    setSearchValue(searchWord);
+    const newFilter = users.filter((value) => {
+      return value.fullname.toLowerCase().includes(searchWord.toLowerCase());
+    });
+    setFilterdData(newFilter);
+  };
 
   useEffect(() => {
     getAllCoversations();
@@ -45,7 +56,7 @@ const Chat = ({ navigation }) => {
       >
         {/* <Text className="font-bold text-3xl">Chats</Text> */}
         <View>
-          <View className="flex mt-3 bg-stone-100 flex-row justify-center rounded-xl items-center border border-stone-300">
+          {/* <View className="flex mt-3 bg-stone-100 flex-row justify-center rounded-xl items-center border border-stone-300">
             <View className="text-[#504B44] ml-12">
               <SearchNormal color={appColors.primaryColor} />
             </View>
@@ -53,7 +64,7 @@ const Chat = ({ navigation }) => {
               placeholder="Search message"
               className="disabled:bg-stone-200  w-full font-semibold  bg-inherit p-3 focus:text-stone-900 text-stone-900 placeholder:text-stone-800 text-sm"
             />
-          </View>
+          </View> */}
         </View>
         <View className="mt-5">
           {conversations.map((item, index) => (

@@ -55,7 +55,10 @@ const Bookings = ({ navigation }) => {
         ) : (
           bookings?.map((item, index) => (
             <Pressable
-              onPress={() => navigation.navigate("BookingDetails", item)}
+              onPress={() => {
+                console.log(item);
+                navigation.navigate("BookingDetails", item);
+              }}
               key={index}
             >
               <BookingCard

@@ -1,18 +1,34 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import React, { useContext } from "react";
-import { BackButton } from "../../../components";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Modal,
+  TouchableWithoutFeedbackBase,
+  Pressable,
+  Image,
+} from "react-native";
+import React, { useContext, useState } from "react";
+import { BackButton, Primarybutton } from "../../../components";
 import { Message } from "iconsax-react-native";
-import { BookingContext } from "../../../context/BookingContext";
 import { SpaceContext } from "../../../context/SpaceContext";
 import moment from "moment";
+import { AuthContext } from "../../../context/AuthContext";
+import { appColors } from "../../../constants/colors";
+import StarRating from "react-native-star-rating";
+import ServiceCard from "../components/ui/card/ServiceCard";
 
 const BookingDetails = ({ route, navigation }) => {
   const { getAllSpace } = useContext(SpaceContext);
+  const { user } = useContext(AuthContext);
+
   const details = route.params;
   navigation.setOptions({
     title: "Details",
     headerLeft: () => <BackButton onPress={() => navigation.pop()} />,
   });
+
   return (
     <View className="flex-1 bg-white px-[24px]">
       <ScrollView className="pt-[24px]" showsVerticalScrollIndicator={false}>
@@ -55,6 +71,18 @@ const BookingDetails = ({ route, navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
+          <View className="">
+            {details.services.map((item, index) => (
+              <ServiceCard
+                services={details.services}
+                id={item.id}
+                type={item.type}
+                ownerId={item.ownerId}
+                key={index}
+              />
+            ))}
+          </View>
+
           {/*  */}
         </View>
         {/*  Event Information End */}

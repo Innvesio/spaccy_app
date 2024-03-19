@@ -101,7 +101,7 @@ const Home = ({ navigation }) => {
                   >
                     <VendorPreview
                       navigation={navigation}
-                      image={item.item?.images[0]?.url}
+                      image={item.item?.images}
                       name={item.item.businessName}
                       service="Service"
                       details={item.item}

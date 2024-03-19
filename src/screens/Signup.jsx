@@ -4,6 +4,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import { Lock, Profile, Sms } from "iconsax-react-native";
@@ -13,6 +14,8 @@ import { SafeAreaView } from "react-native";
 import axios from "axios";
 import { useToast } from "react-native-toast-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import env from "../constants/env";
+import { appColors } from "../constants/colors";
 
 const Signup = ({ navigation }) => {
   const [terms, setTerms] = useState(false);
@@ -23,41 +26,65 @@ const Signup = ({ navigation }) => {
     password: "",
     firstName: "",
     lastName: "",
-    accountType: "eventE",
+    accountType: "eventEnthusiast",
   });
   const [showPass, setShowPass] = useState(false);
 
   const submit = async () => {
+    const data = {
+      email: signupData.email,
+      password: signupData.password.trim(),
+      firstName: signupData.firstName,
+      lastName: signupData.lastName,
+      accountType: signupData.accountType,
+      terms: {
+        terms_accepted: terms,
+        terms_accepted_at: Date.now,
+        terms_version: "v1",
+      },
+    };
     setLoading(true);
-    try {
-      const response = await axios.post(
-        `${env.API_URL}/auth/signup`,
-        loginData
-      );
-      if (response.data) {
-        setLoading(false);
-        console.log(response.data);
-        const jsonValue = JSON.stringify(response.data);
-        await AsyncStorage.setItem("user", jsonValue);
-        navigation.navigate("Main");
-      } else {
-        console.log("not working");
-      }
-    } catch (err) {
-      setLoading(false);
-      toast.show(
-        err.response ? err.response.data.error : "Sorry,please try again",
-        {
-          type: "danger",
-          dangerColor: "#ff5c5c",
+    if (terms) {
+      try {
+        const response = await axios.post(`${env.API_URL}/auth/signup`, data);
+        if (response.data) {
+          setLoading(false);
+          console.log(response.data);
+          const jsonValue = JSON.stringify(response.data);
+          await AsyncStorage.setItem("user", jsonValue);
+          navigation.navigate("Main");
+        } else {
+          console.log("not working");
         }
-      );
+      } catch (err) {
+        setLoading(false);
+        console.log(err.response.data);
+        if (err.response.data.error === "Email already in use") {
+          toast.show("Email already in use", {
+            type: "danger",
+            dangerColor: appColors.errorRed,
+          });
+        } else {
+          toast.show(
+            err.response ? err.response.data.error : "Sorry,please try again",
+            {
+              type: "danger",
+              dangerColor: appColors.errorRed,
+            }
+          );
+        }
+      }
+    } else {
+      toast.show("Agree to terms and Conditions", {
+        type: "warning",
+        dangerColor: appColors.errorRed,
+      });
     }
   };
   return (
-    <SafeAreaView className="flex-1">
+    <View className="flex-1 px-[10px] pt-[60px]">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="flex-1 flex justify-center w-full p-[24px] ">
+        <View className="flex-1 flex justify-center w-full  ">
           <ScrollView
             alwaysBounceVertical
             showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
@@ -105,17 +132,25 @@ const Signup = ({ navigation }) => {
                   </View>
                   <View className="w-full flex items-end gap-2">
                     <CustomInput
-                      nChangeText={(val) =>
-                        setSignupData((prev) => ({ ...prev, email: val }))
+                      secureTextEntry={showPass}
+                      onChangeText={(val) =>
+                        setSignupData((prev) => ({ ...prev, password: val }))
                       }
                       icon={<Lock color="#504B44" />}
                       placeholder="Enter Password"
                     />
-                    <Text className="font-semibold text-xs">Show password</Text>
+                    <Text
+                      onPress={() => setShowPass(!showPass)}
+                      title="Show password"
+                      className="font-semibold text-xs"
+                    >
+                      {showPass ? "Show password" : "Hide password"}
+                    </Text>
                   </View>
 
                   <View className="w-full flex items-end gap-2">
                     <CustomInput
+                      secureTextEntry={showPass}
                       icon={<Lock color="#504B44" />}
                       placeholder="Confirm Password"
                     />
@@ -133,16 +168,17 @@ const Signup = ({ navigation }) => {
                   <View className="text-xs ml-2 h-full">
                     <Text>
                       I have read, accepted and agreed to the
-                      <Text href="/signup" className="font-bold underline">
-                        {" "}
-                        Terms and Conditions and Privacy Policy.
-                      </Text>
+                      <Pressable onPress={() => navigation.navigate("Terms")}>
+                        <Text href="/signup" className="font-bold underline">
+                          Terms and Conditions and Privacy Policy.
+                        </Text>
+                      </Pressable>
                     </Text>
                   </View>
                 </View>
                 {/* End of Terms */}
                 <View className="mt-5 w-full">
-                  <Primarybutton title="Login" />
+                  <Primarybutton onPress={submit} title="Signup" />
                 </View>
                 <Text className="text-xs mt-5">
                   Already have an account?
@@ -159,7 +195,7 @@ const Signup = ({ navigation }) => {
           </ScrollView>
         </View>
       </TouchableWithoutFeedback>
-    </SafeAreaView>
+    </View>
   );
 };
 

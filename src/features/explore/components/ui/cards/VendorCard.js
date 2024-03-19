@@ -3,11 +3,11 @@ import React from "react";
 import { LinearGradient } from "react-native-svg";
 import { Star1 } from "iconsax-react-native";
 
-const VendorCard = ({ details, navigation }) => {
-  console.log(
-    details.businessInfo[0].images?.filter((image) => image.isCoverPhoto)[0]
-      ?.url || details.businessInfo[0].images[0]?.url
-  );
+const VendorCard = ({ details, navigation, index }) => {
+  // console.log(
+  //   details.businessInfo[0].images?.filter((image) => image.isCoverPhoto)[0]
+  //     ?.url || details.businessInfo[0].images[0]?.url
+  // );
   return (
     <Pressable
       onPress={() => navigation.navigate("VendorFullDetailsScreen", details)}
@@ -18,7 +18,7 @@ const VendorCard = ({ details, navigation }) => {
           className="w-full h-full object-cover absolute rounded-xl"
           source={{
             uri:
-              details.businessInfo[0].images?.filter(
+              details.businessInfo[index].images?.filter(
                 (image) => image.isCoverPhoto
               )[0]?.url || details.businessInfo[0].images[0]?.url,
           }}
@@ -31,7 +31,7 @@ const VendorCard = ({ details, navigation }) => {
         >
           <View className="w-full flex-row items-center  space-x-2 mb-1">
             <Text className="text-white text-xs  text-left font-bold  capitalize truncate">
-              {details.businessInfo[0].businessName}
+              {details.businessInfo[index].businessName}
             </Text>
             <View className="text-[#DB743D]">
               <Star1 variant="Bold" color="gold" size={14} />
@@ -39,9 +39,9 @@ const VendorCard = ({ details, navigation }) => {
             <Text className="text-white">0</Text>
           </View>
           <Text className="text-white font-bold text-left text-xs">
-            {details.vendorProfile[0].vendorLocation.city +
+            {details.vendorProfile[index].vendorLocation.city +
               " " +
-              details.vendorProfile[0].vendorLocation.state}
+              details.vendorProfile[index].vendorLocation.state}
           </Text>
         </LinearGradient>
       </View>

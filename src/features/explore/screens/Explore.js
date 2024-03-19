@@ -122,7 +122,7 @@ const Explore = ({ navigation }) => {
                     <View className="bg-gray-100 w-full animate-pulse relative object-cover overflow-hidden rounded-lg h-[250px]  "></View>
                   )}
                 />
-              ) : searchResult.length <= 0 ? (
+              ) : searchResult?.length <= 0 ? (
                 <View className="flex-1 justify-center pt-20 items-center">
                   <Text className="text-xl font-bold text-stone-300">
                     No result found
@@ -133,10 +133,15 @@ const Explore = ({ navigation }) => {
                   className="space-x-6"
                   itemDimension={130}
                   data={searchOptions.searchType === "space" ? spaces : vendors}
-                  renderItem={({ item }) =>
+                  renderItem={({ item, index }) =>
                     searchOptions.searchType === "space" ? (
                       <Pressable
-                        onPress={() => navigation.navigate("FullDetails", item)}
+                        onPress={() =>
+                          navigation.navigate("FullDetails", {
+                            details: item,
+                            venue: item.venueInfo,
+                          })
+                        }
                         key={item._id}
                       >
                         <View className="bg-white w-full relative object-cover overflow-hidden border border-stone-200  h-[230px] rounded-xl ">
@@ -174,6 +179,7 @@ const Explore = ({ navigation }) => {
                       </Pressable>
                     ) : (
                       <VendorCard
+                        index={index}
                         key={item.businessInfo[0]._id}
                         details={item}
                         navigation={navigation}

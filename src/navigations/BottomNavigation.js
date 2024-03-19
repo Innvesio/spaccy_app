@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { LoginScreen, SignupScreen } from "../screens";
 import * as Location from "expo-location";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Home,
   Profile,
@@ -17,10 +17,17 @@ import {
   ProfileScreen,
 } from "../features";
 import { appColors } from "../constants/colors";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
 
 const Tab = createBottomTabNavigator();
 const BottomNavigation = () => {
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState({});
+  const notificationListener = useRef({});
+  const responseListener = useRef({});
+
   //   const askForLocation = async () => {
   //    let {status} = await Location.requestForegroundPermissionsAsync();
   //   };
@@ -30,6 +37,41 @@ const BottomNavigation = () => {
       await Location.requestBackgroundPermissionsAsync();
     }
   };
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+    );
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        console.log("Notification Received");
+        setNotification(notification);
+      });
+
+    return () => {
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+      }
+
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
+  }, []);
+
+  console.log("Token: ", expoPushToken);
+  console.log(notification);
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
 
   useEffect(() => {
     startBackgroundTracking();
@@ -90,5 +132,44 @@ const BottomNavigation = () => {
     </Tab.Navigator>
   );
 };
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === "android") {
+    await Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    // Learn more about projectId:
+    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+    token = (
+      await Notifications.getExpoPushTokenAsync({
+        projectId: "your-project-id",
+      })
+    ).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  return token;
+}
 
 export default BottomNavigation;

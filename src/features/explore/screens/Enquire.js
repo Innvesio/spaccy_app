@@ -6,7 +6,7 @@ import {
   Modal,
   TextInput,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BackButton, Primarybutton } from "../../../components";
 import { SelectList } from "react-native-dropdown-select-list";
 import { appColors } from "../../../constants/colors";
@@ -32,7 +32,8 @@ const Enquire = ({ route, navigation }) => {
   const { createConvasation, setNewMessage } = useContext(ChatContext);
   const { searchValue } = useContext(SpaceContext);
   const { user } = useContext(AuthContext);
-  const details = route.params;
+  const [maxCapacity, setMaxCapacity] = useState(0);
+  const { details, layoutCapacity } = route.params;
 
   navigation.setOptions({
     headerTitleAlign: "left",
@@ -56,13 +57,21 @@ const Enquire = ({ route, navigation }) => {
   //     setDates({ ...dates, ...newDates });
   //   };
 
+  useEffect(() => {
+    layoutCapacity.forEach((item) => {
+      if (enquireNowDetails.layout === item.label) {
+        setMaxCapacity(parseInt(item.number) + 1);
+      }
+    });
+  }, [enquireNowDetails.layout]);
+
   const data = [
     { key: "0", value: "Dining" },
     { key: "1", value: "Standing" },
-    { key: "2", value: "Class Room" },
+    { key: "2", value: "Class room" },
     { key: "3", value: "Theatre" },
     { key: "4", value: "U-Shaped" },
-    { key: "5", value: "Board Products" },
+    { key: "5", value: "Board room" },
   ];
 
   const dateOption = {
@@ -144,25 +153,27 @@ const Enquire = ({ route, navigation }) => {
     }
   };
   const enquireNow = () => {
-    bookaSpace(details, "space", searchValue);
-    console.log(bookingSuccess);
-    if (bookingSuccess) {
-      createConvasation(
-        "space",
-        details._id,
-        details.ownedBy,
-        {
-          eventStartTime: enquireNowDetails.dateAndTime.startTime,
-          eventEndTime: enquireNowDetails.dateAndTime.endTime,
-          numberOfGuests: enquireNowDetails.people,
-          eventDate: enquireNowDetails.dateAndTime.date,
-          eventType: searchValue,
-          eventTitle: user?.data.firstName,
-        },
-        details.spaceName,
-        navigation
-      );
-    }
+    console.log(enquireNowDetails);
+    details.available.find();
+    // bookaSpace(details, "space", searchValue);
+    // console.log(bookingSuccess);
+    // if (bookingSuccess) {
+    //   createConvasation(
+    //     "space",
+    //     details._id,
+    //     details.ownedBy,
+    //     {
+    //       eventStartTime: enquireNowDetails.dateAndTime.startTime,
+    //       eventEndTime: enquireNowDetails.dateAndTime.endTime,
+    //       numberOfGuests: enquireNowDetails.people,
+    //       eventDate: enquireNowDetails.dateAndTime.date,
+    //       eventType: searchValue,
+    //       eventTitle: user?.data.firstName,
+    //     },
+    //     details.spaceName,
+    //     navigation
+    //   );
+    // }
   };
 
   return (
@@ -233,15 +244,7 @@ const Enquire = ({ route, navigation }) => {
             setSelected={(val) =>
               setEnquireNowDetails((prev) => ({ ...prev, people: val }))
             }
-            data={[
-              { value: 1 },
-              { value: 2 },
-              { value: 3 },
-              { value: 4 },
-              { value: 5 },
-              { value: 6 },
-              { value: 7 },
-            ]}
+            data={Array.from({ length: maxCapacity }, (_, index) => index)}
             searchicon={
               <View className="pr-2">
                 <Profile2User size="20" color={appColors.primaryColor} />

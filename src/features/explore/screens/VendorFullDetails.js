@@ -154,6 +154,41 @@ const VendorFullDetails = ({ route, navigation }) => {
             </View>
           </View>
           {/*  */}
+          <View className="md:px-5 mt-10 w-full md:w-[70%]">
+            <Text className="uppercase font-bold mb-3">Other information</Text>
+            <View className="space-y-1">
+              <View className=" flex flex-wrap">
+                <Text>{businessInfo?.additionalInformation.likeToKnow}</Text>
+              </View>
+
+              <View className="flex flex-wrap">
+                <Text>
+                  Total number of staff required to get this service done{" "}
+                  <Text className="font-bold">
+                    {businessInfo?.logisticsRequirements.personnel}
+                  </Text>
+                </Text>
+              </View>
+
+              <View className="flex flex-wrap">
+                <Text>
+                  Setup time{" "}
+                  <Text className="font-bold">
+                    {businessInfo?.logisticsRequirements.setupTime}
+                  </Text>
+                </Text>
+              </View>
+
+              <View className="flex flex-wrap">
+                <Text>
+                  Take down time{" "}
+                  <Text className="font-bold">
+                    {businessInfo.logisticsRequirements.takeDownTime}
+                  </Text>
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
       <EnquireBottomSheet

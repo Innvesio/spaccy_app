@@ -6,7 +6,7 @@ import { appColors } from "../../../../constants/colors";
 const PricingCard = ({ details }) => {
   return (
     <View className="mt-5 space-y-3">
-      <Text className="font-bold text-lg truncate mt-5">PRICE </Text>
+      <Text className="font-bold text-lg truncate mt-5">PRICES</Text>
       <View className="rounded-xl bg-stone-100 p-7">
         <View className="w-full flex-row items-center justify-between">
           <Text>{details.pricing.for}</Text>

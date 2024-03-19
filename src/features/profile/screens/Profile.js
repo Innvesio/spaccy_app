@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React, { useContext, useEffect } from "react";
 import {
   MessageQuestion,
   Notification,
   Save2,
+  Trash,
   UserEdit,
 } from "iconsax-react-native";
 import { appColors } from "../../../constants/colors";
@@ -68,45 +69,55 @@ const Profile = ({ navigation }) => {
       route: "Support",
       description: "Get answers to questions you may have.",
     },
+    {
+      icon: <Trash size="26" color={appColors.errorRed} variant="Bold" />,
+      title: "Delete account",
+      route: "DeleteScreen",
+      description: "This action is permanent",
+    },
   ];
   return (
-    <View className="flex-1 p-[24] bg-white">
-      {/* Profile Image */}
-      <View className="w-full flex items-center mt-7">
-        <View className="w-40 h-40">
-          <ProfilePicture
-            image={user?.data.profilePhoto[0]?.url}
-            firstLetter={user?.data.firstName[0]}
-          />
-        </View>
-        <Text className="font-semibold text-xl mt-2">
-          {user?.data.firstName + " " + user?.data.lastName}
-        </Text>
-        <Text className="font-medium text-gray-500 text-xs mt-1">
-          {getAccountType()}
-        </Text>
-      </View>
-      {/* End Profile Image */}
-      <View className="bg-white  border-gray-200  rounded-xl space-y-3 relative w-full mt-8">
-        {userProfileSettings.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(item.route);
-              console.log(user);
-            }}
-            key={index}
-            className="h-20 w-full border rounded-md flex space-x-4 flex-row items-center px-5  border-gray-200"
-          >
-            <View className="bg">{item.icon}</View>
-            <View className="text-gray-500  flex-1">
-              <Text className="font-semibold text-base">{item.title}</Text>
-              <Text className="font-medium  text-gray-400 text-xs">
-                {item.description}
-              </Text>
+    <View className="flex-1 bg-white">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+        <View className="flex-1 p-[24] ">
+          {/* Profile Image */}
+          <View className="w-full flex items-center mt-7">
+            <View className="w-40 h-40">
+              <ProfilePicture
+                image={user?.data.profilePhoto[0]?.url}
+                firstLetter={user?.data.firstName[0]}
+              />
             </View>
-          </TouchableOpacity>
-        ))}
-      </View>
+            <Text className="font-semibold text-xl mt-2">
+              {user?.data.firstName + " " + user?.data.lastName}
+            </Text>
+            <Text className="font-medium text-gray-500 text-xs mt-1">
+              {getAccountType()}
+            </Text>
+          </View>
+          {/* End Profile Image */}
+          <View className="bg-white  border-gray-200  rounded-xl space-y-3 relative w-full mt-8">
+            {userProfileSettings.map((item, index) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate(item.route);
+                  console.log(user);
+                }}
+                key={index}
+                className="h-20 w-full border rounded-md flex space-x-4 flex-row items-center px-5  border-gray-200"
+              >
+                <View className="bg">{item.icon}</View>
+                <View className="text-gray-500  flex-1">
+                  <Text className="font-semibold text-base">{item.title}</Text>
+                  <Text className="font-medium  text-gray-400 text-xs">
+                    {item.description}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
